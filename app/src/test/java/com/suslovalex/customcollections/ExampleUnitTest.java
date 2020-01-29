@@ -29,6 +29,7 @@ public class ExampleUnitTest {
     private void inition() {
         number1 = 2;
         number2 = 2;
+        int a;
 
     }
 
