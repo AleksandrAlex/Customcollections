@@ -11,8 +11,8 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-    int number1;
-    int number2;
+    private int number1;
+    private int number2;
 
 
 
