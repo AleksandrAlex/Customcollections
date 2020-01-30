@@ -12,23 +12,43 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class CustomArrayList <E> implements List <E> {
-    int capacity = 10;
-    int size = 0;
-    E[] array;
+    private int capacity = 10;
+    private int size = 0;
+    private Object[] array;
+    private final int defaultArrayCapacity = 10;
+
+    public CustomArrayList() {
+        this.array = new Object[defaultArrayCapacity];
+    }
+
+    public CustomArrayList(int initialCapacity) {
+        if (initialCapacity>0){
+            array = new Object[initialCapacity];
+        }
+        else if (initialCapacity==0){
+            array = new Object[defaultArrayCapacity];
+        }
+        else{
+            throw new IllegalArgumentException("Illegal Capacity: "+
+                    initialCapacity);
+        }
+    }
+
+
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     @Override
     public boolean contains(@Nullable Object o) {
-        return false;
+        return indexOf(o) >= 0;
     }
 
     @NonNull
@@ -51,7 +71,13 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public boolean add(E e) {
-        return false;
+        if (capacity==size){
+            array = Arrays.copyOf(array, array.length*2);
+            capacity = array.length-1;
+        }
+        array[size] = e;
+        size++;
+        return true;
     }
 
     @Override
@@ -91,7 +117,12 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public E get(int index) {
-        return null;
+        if (index<size){
+            return (E) array[index];
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
     @Override
@@ -111,7 +142,16 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public int indexOf(@Nullable Object o) {
-        return 0;
+        if (o == null) {
+            for (int i = 0; i < size; i++)
+                if (array[i]==null)
+                    return i;
+        } else {
+            for (int i = 0; i < size; i++)
+                if (o.equals(array[i]))
+                    return i;
+        }
+        return -1;
     }
 
     @Override
