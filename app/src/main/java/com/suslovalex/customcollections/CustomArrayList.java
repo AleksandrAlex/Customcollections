@@ -34,8 +34,6 @@ public class CustomArrayList <E> implements List <E> {
         }
     }
 
-
-
     @Override
     public int size() {
         return size;
@@ -137,7 +135,18 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public E remove(int index) {
-        return null;
+        if (index >= size) {
+            String message = "Your operation is not correct. Your index is: "+index+", Size of array is: "+size;
+            throw new IndexOutOfBoundsException(message);
+        }
+        E [] temp = (E[]) new Object[array.length];
+        System.arraycopy(array,0,temp,0,index);
+        int amountElementsAfterIndex = temp.length-1-index;
+        System.arraycopy(array,index+1,temp,index,amountElementsAfterIndex);
+        E[] arr = (E[]) new Object[temp.length-1];
+        System.arraycopy(temp,0,arr,0,arr.length);
+        return arr[index];
+
     }
 
     @Override
@@ -176,27 +185,4 @@ public class CustomArrayList <E> implements List <E> {
     public List<E> subList(int fromIndex, int toIndex) {
         return null;
     }
-
-
-    //  @Override
-    //  public boolean add(E o) {
-    //      if (capacity==array.length){
-    //          array = Arrays.copyOf(array, array.length*2);
-    //          capacity = array.length-1;
-    //      }
-    //      array[size] = E o;
-    //      size++;
-    //      return true;
-    //  }
-
-
-//   public E remove(int index) {
-//       E [] temp = array;
-//       array = (E[]) new Object[temp.length-1];
-//       System.arraycopy(temp,0,array,0,index);
-//       int amountElementsAfterIndex = array.length - index-1;
-//       System.arraycopy(temp, index+1, array,index,amountElementsAfterIndex);
-//       return null;
-//   }
-
 }
