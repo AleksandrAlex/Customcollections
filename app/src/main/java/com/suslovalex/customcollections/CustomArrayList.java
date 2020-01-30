@@ -52,13 +52,13 @@ public class CustomArrayList <E> implements List <E> {
     @NonNull
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new CustomIterator<>(array);
     }
 
     @NonNull
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        return Arrays.copyOf(array, size);
     }
 
     @NonNull
@@ -71,7 +71,7 @@ public class CustomArrayList <E> implements List <E> {
     public boolean add(E e) {
         if (capacity==size){
             array = Arrays.copyOf(array, array.length*2);
-            capacity = array.length-1;
+            capacity = array.length;
         }
         array[size] = e;
         size++;
@@ -80,8 +80,20 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public boolean remove(@Nullable Object o) {
-        return false;
-    }
+        for (int i=0; i<size; i++)
+            if (o.equals(array[i])){
+                E [] temp = (E[]) array;
+                array = (E[]) new Object[temp.length-1];
+                int index = i;
+                System.arraycopy(temp,0,array,0,index);
+                int amountElementsAfterIndex = temp.length - index-1;
+                System.arraycopy(temp, index+1, array,index,amountElementsAfterIndex);
+                size--;
+                return true;
+            }
+            return false;
+        }
+
 
     @Override
     public boolean containsAll(@NonNull Collection<?> c) {
@@ -110,6 +122,11 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public void clear() {
+        for (int i = 0; i < size; i++)
+            array[i] = null;
+
+        size = 0;
+        capacity = defaultArrayCapacity;
 
     }
 
@@ -125,7 +142,7 @@ public class CustomArrayList <E> implements List <E> {
 
     @Override
     public E set(int index, E element) {
-        return null;
+        return (E) (array[index] = element);
     }
 
     @Override
@@ -139,13 +156,13 @@ public class CustomArrayList <E> implements List <E> {
             String message = "Your operation is not correct. Your index is: "+index+", Size of array is: "+size;
             throw new IndexOutOfBoundsException(message);
         }
-        E [] temp = (E[]) new Object[array.length];
-        System.arraycopy(array,0,temp,0,index);
-        int amountElementsAfterIndex = temp.length-1-index;
-        System.arraycopy(array,index+1,temp,index,amountElementsAfterIndex);
-        E[] arr = (E[]) new Object[temp.length-1];
-        System.arraycopy(temp,0,arr,0,arr.length);
-        return arr[index];
+        E [] temp = (E[]) array;
+        array = (E[]) new Object[temp.length-1];
+        System.arraycopy(temp,0,array,0,index);
+        int amountElementsAfterIndex = temp.length - index-1;
+        System.arraycopy(temp, index+1, array,index,amountElementsAfterIndex);
+        size--;
+        return (E) array[index];
 
     }
 
