@@ -28,28 +28,15 @@ public class CustomArrayListTest {
         int expectedSize = 1;
         int expectedElementIndex = 0;
 
-        assertEquals(expectedSize, customArrayList.size());
+        assertEquals(expectedSize, customArrayList.size);
         assertEquals(expectedElement, customArrayList.get(expectedElementIndex));
     }
 
+
     @Test
     public void addDefaultTestNotEmptyList(){
-        customArrayList = initEmptyList();
-        int element0 = 3;
-        int element1 = 1;
-        int element2 = 8;
 
-        customArrayList.add(element0);
-        customArrayList.add(element1);
-        customArrayList.add(element2);
 
-        int expectAmountOfNumbers = 3;
-
-        int expectElement = 8;
-        int expectedElementIndex = 2;
-
-        assertEquals(expectAmountOfNumbers, customArrayList.size());
-        assertEquals(expectElement, customArrayList.get(expectedElementIndex));
     }
 
     @Test
