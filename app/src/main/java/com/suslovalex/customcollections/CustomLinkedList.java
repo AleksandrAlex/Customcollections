@@ -95,6 +95,16 @@ public class CustomLinkedList <E> implements List <E> {
 
     @Override
     public boolean remove(@Nullable Object o) {
+        if (o == null) {
+            for (Node<E> x = first; x != null; x = x.next) {
+                if (x.element == null) {
+                    Node <E> node = x;
+                    return true;
+                }
+            }
+        } else {
+
+        }
         return false;
     }
 
@@ -148,9 +158,21 @@ public class CustomLinkedList <E> implements List <E> {
             linkLast(element);
         }
         else {
-
+            linkBefore(element, node(index));
+            size++;
         }
 
+    }
+
+    private void linkBefore(E element, Node<E> node) {
+        final Node<E> pred = node.prev;
+        final Node<E> newNode = new Node<>(element, node, pred);
+        node.prev = newNode;
+        if (pred == null)
+            first = newNode;
+        else
+            pred.next = newNode;
+        size++;
     }
 
     @Override
@@ -198,6 +220,21 @@ public class CustomLinkedList <E> implements List <E> {
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
         return null;
+    }
+    Node<E> node(int index) {
+        // assert isElementIndex(index);
+
+        if (index < (size >> 1)) {
+            Node<E> x = first;
+            for (int i = 0; i < index; i++)
+                x = x.next;
+            return x;
+        } else {
+            Node<E> x = last;
+            for (int i = size - 1; i > index; i--)
+                x = x.prev;
+            return x;
+        }
     }
 
 
