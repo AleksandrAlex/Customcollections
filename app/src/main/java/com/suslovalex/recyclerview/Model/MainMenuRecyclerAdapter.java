@@ -1,17 +1,19 @@
-package com.suslovalex.recyclerview;
+package com.suslovalex.recyclerview.Model;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.suslovalex.customcollections.R;
+import com.suslovalex.recyclerview.View.InformationDialog;
+import com.suslovalex.recyclerview.View.MainMenuActivity;
 
 import java.util.List;
 
@@ -21,10 +23,11 @@ import java.util.List;
 
 public class MainMenuRecyclerAdapter extends RecyclerView.Adapter<MainMenuRecyclerAdapter.ViewHolder> {
 
-    private List<Item> mItems;
+    private List<MainMenuItem> mMainMenuItems;
+    private DialogFragment fragment;
 
-    public MainMenuRecyclerAdapter(List<Item> items) {
-        mItems = items;
+    public MainMenuRecyclerAdapter(List<MainMenuItem> mainMenuItems) {
+        mMainMenuItems = mainMenuItems;
     }
 
     @NonNull
@@ -37,24 +40,25 @@ public class MainMenuRecyclerAdapter extends RecyclerView.Adapter<MainMenuRecycl
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        Item item = mItems.get(position);
-        holder.title.setText(item.getTitle());
-        holder.description.setText(item.getDescription());
-        holder.image.setImageResource(item.getImageId());
+        final MainMenuItem mainMenuItem = mMainMenuItems.get(position);
+        holder.title.setText(mainMenuItem.getTitle());
+        holder.description.setText(mainMenuItem.getDescription());
+        holder.image.setImageResource(mainMenuItem.getImageId());
 
         holder.mConstrainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItems.get(position);
-                Toast toast = Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT);
-                toast.show();
+                DialogFragment dialogWindowMenu = new InformationDialog(mainMenuItem);
+                MainMenuActivity activity = (MainMenuActivity) v.getContext();
+
+                dialogWindowMenu.show(activity.getSupportFragmentManager(),"");
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mMainMenuItems.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

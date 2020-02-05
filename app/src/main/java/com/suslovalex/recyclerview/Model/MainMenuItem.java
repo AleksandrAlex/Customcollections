@@ -1,10 +1,10 @@
-package com.suslovalex.recyclerview;
+package com.suslovalex.recyclerview.Model;
 
 /**
- * Item is variable of MainMenu.
+ * MainMenuItem is variable of MainMenu.
  */
 
-public class Item {
+public class MainMenuItem {
     private String mTitle;
     private String mDescription;
     private int mImageId;
@@ -16,7 +16,7 @@ public class Item {
      * @param imageId is ID for menu image view
      */
 
-    public Item(String title, String description, int imageId) {
+    public MainMenuItem(String title, String description, int imageId) {
         mTitle = title;
         mDescription = description;
         mImageId = imageId;

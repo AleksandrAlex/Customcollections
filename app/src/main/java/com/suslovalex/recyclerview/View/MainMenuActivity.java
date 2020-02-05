@@ -1,4 +1,4 @@
-package com.suslovalex.recyclerview;
+package com.suslovalex.recyclerview.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import com.suslovalex.customcollections.R;
+import com.suslovalex.recyclerview.Model.MainMenuItem;
+import com.suslovalex.recyclerview.Model.MainMenuRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public class MainMenuActivity extends AppCompatActivity {
 
-    private List<Item> mItems = new ArrayList<>();
+    private List<MainMenuItem> mMainMenuItems = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private MainMenuRecyclerAdapter mMainMenuRecyclerAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -32,7 +34,8 @@ public class MainMenuActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mMainMenuRecyclerAdapter = new MainMenuRecyclerAdapter(mItems/*, this*/);
+        mMainMenuRecyclerAdapter = new MainMenuRecyclerAdapter(mMainMenuItems/*, this*/);
+
         mRecyclerView.setAdapter(mMainMenuRecyclerAdapter);
     }
 
@@ -41,8 +44,8 @@ public class MainMenuActivity extends AppCompatActivity {
      */
     private void prepareCardsData() {
 
-        mItems.add(new Item("title: first item","description: first item description",R.drawable.ic_android));
-        mItems.add(new Item("title: second item","description: second item description",R.drawable.ic_build));
-        mItems.add(new Item("title: third item","description: third item description",R.drawable.ic_wb_sunny));
+        mMainMenuItems.add(new MainMenuItem("title: first item","description: first item description",R.drawable.ic_android));
+        mMainMenuItems.add(new MainMenuItem("title: second item","description: second item description",R.drawable.ic_build));
+        mMainMenuItems.add(new MainMenuItem("title: third item","description: third item description",R.drawable.ic_wb_sunny));
     }
 }
