@@ -59,10 +59,13 @@ public class InformationDialog extends DialogFragment {
         mTitleDialogText.setText(mMainMenuItem.getTitle());
         mDescriptionDialogText.setText(mMainMenuItem.getDescription());
         mDialogImage.setImageResource(mMainMenuItem.getImageId());
-        mSummaryClose.setText(prepareText(mPosition));
+        mSummaryClose.setText(prepareText());
     }
 
-    private String prepareText(int position) {
-        return position+1+POSITION;
+    private String prepareText() {
+        String string = mMainMenuItem.getTitle();
+        String [] strings = string.split(" ");
+        String firstWordFromTitle = strings[0];
+        return firstWordFromTitle+POSITION;
     }
 }
