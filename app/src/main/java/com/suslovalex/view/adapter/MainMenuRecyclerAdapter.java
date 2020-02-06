@@ -1,4 +1,4 @@
-package com.suslovalex.recyclerview.Model;
+package com.suslovalex.view.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +12,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.suslovalex.customcollections.R;
-import com.suslovalex.recyclerview.View.InformationDialog;
-import com.suslovalex.recyclerview.View.MainMenuActivity;
+import com.suslovalex.model.MainMenuItem;
+import com.suslovalex.view.dialog.InformationDialog;
+import com.suslovalex.view.activity.MainMenuActivity;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.suslovalex.recyclerview.Model;
+package com.suslovalex.model;
 
 /**
  * MainMenuItem is variable of MainMenu.
@@ -27,7 +27,7 @@ public class MainMenuItem {
     }
 
     public void setTitle(String title) {
-        this.mTitle = title;
+        mTitle = title;
     }
 
     public String getDescription() {
@@ -35,7 +35,7 @@ public class MainMenuItem {
     }
 
     public void setDescription(String description) {
-        this.mDescription = description;
+        mDescription = description;
     }
 
     public int getImageId() {
@@ -43,6 +43,6 @@ public class MainMenuItem {
     }
 
     public void setImageId(int imageId) {
-        this.mImageId = imageId;
+        mImageId = imageId;
     }
 }

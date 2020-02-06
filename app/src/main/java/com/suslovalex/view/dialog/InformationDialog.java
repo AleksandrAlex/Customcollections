@@ -1,4 +1,4 @@
-package com.suslovalex.recyclerview.View;
+package com.suslovalex.view.dialog;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,11 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.suslovalex.customcollections.R;
-import com.suslovalex.recyclerview.Model.MainMenuItem;
+import com.suslovalex.model.MainMenuItem;
 
 
 public class InformationDialog extends DialogFragment {
 
+    private final String POSITION = " position";
     private MainMenuItem mMainMenuItem;
     private TextView mTitleDialogText;
     private TextView mDescriptionDialogText;
@@ -35,14 +36,19 @@ public class InformationDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_window_menu, container, false);
         bindViewById(view);
         setValuesForViews();
+        setListeners();
+        return view;
+    }
+
+    private void setListeners() {
         mSummaryClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getDialog().cancel();
             }
         });
-        return view;
     }
+
     private void bindViewById (View v){
         mTitleDialogText = v.findViewById(R.id.textView_dialog_title);
         mDescriptionDialogText = v.findViewById(R.id.textView_dialog_description);
@@ -53,6 +59,10 @@ public class InformationDialog extends DialogFragment {
         mTitleDialogText.setText(mMainMenuItem.getTitle());
         mDescriptionDialogText.setText(mMainMenuItem.getDescription());
         mDialogImage.setImageResource(mMainMenuItem.getImageId());
-        mSummaryClose.setText(mPosition+1+"");
+        mSummaryClose.setText(prepareText(mPosition));
+    }
+
+    private String prepareText(int position) {
+        return position+1+POSITION;
     }
 }
