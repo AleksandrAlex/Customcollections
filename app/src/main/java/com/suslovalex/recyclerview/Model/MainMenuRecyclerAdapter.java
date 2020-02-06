@@ -24,7 +24,6 @@ import java.util.List;
 public class MainMenuRecyclerAdapter extends RecyclerView.Adapter<MainMenuRecyclerAdapter.ViewHolder> {
 
     private List<MainMenuItem> mMainMenuItems;
-    private DialogFragment fragment;
 
     public MainMenuRecyclerAdapter(List<MainMenuItem> mainMenuItems) {
         mMainMenuItems = mainMenuItems;
@@ -48,10 +47,10 @@ public class MainMenuRecyclerAdapter extends RecyclerView.Adapter<MainMenuRecycl
         holder.mConstrainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialogWindowMenu = new InformationDialog(mainMenuItem);
+                DialogFragment fragment = new InformationDialog(mainMenuItem, position);
                 MainMenuActivity activity = (MainMenuActivity) v.getContext();
 
-                dialogWindowMenu.show(activity.getSupportFragmentManager(),"");
+                fragment.show(activity.getSupportFragmentManager(),"");
             }
         });
     }
