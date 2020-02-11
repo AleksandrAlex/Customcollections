@@ -32,7 +32,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button mPause;
     private Button mStop;
     private Intent mIntent;
-    private ServicePlayer servicePlayer;
+    private ServicePlayer mServicePlayer;
     private boolean mBound = false;
     private int mSongId;
 
@@ -40,22 +40,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mSongId = songId;
     }
 
-
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
-            servicePlayer = playerBinder.getPlayer();
+            mServicePlayer = playerBinder.getPlayer();
             mBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mBound = false;
-
         }
     };
-
 
     @Nullable
     @Override
@@ -64,8 +61,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         bindViews(v);
         mIntent = new Intent(getContext(),ServicePlayer.class);
         mIntent.putExtra(SONG, R.raw.kassabian_fire);
-
-
         getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
         return v;
     }
@@ -76,7 +71,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mPlay = view.findViewById(R.id.playBtn);
         mPause = view.findViewById(R.id.pauseBtn);
         mStop = view.findViewById(R.id.stopBtn);
-
         mPlay.setOnClickListener(this);
         mStop.setOnClickListener(this);
         mPause.setOnClickListener(this);
@@ -87,44 +81,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.playBtn:
-             //  mPlay();
-
-                servicePlayer.playMusic();
-               //getContext().startForegroundService(new Intent(getContext(), ServicePlayer.class));
+                mServicePlayer.playMusic();
                 break;
 
             case R.id.pauseBtn:
-           //   mPause();
-                //servicePlayer.pauseMusic();
+                mServicePlayer.pauseMusic();
                 break;
 
             case R.id.stopBtn:
-              //  mStop();
-                servicePlayer.stopMusic();
-                //servicePlayer.stopMusic();
-               // getContext().stopService(new Intent(getContext(), ServicePlayer.class));
+                mServicePlayer.stopMusic();
                 break;
         }
     }
-
-//   public void mPlay (){
-//       if (mediaPlayer == null){
-//           mediaPlayer = MediaPlayer.create(getActivity(),R.raw.kassabian_fire);
-//       }
-//       mediaPlayer.start();
-//   }
-//   public void mPause(){
-//       if (mediaPlayer!=null) {
-//           mediaPlayer.mPause();
-//       }
-//   }
-//   public  void mStop(){
-//       if (mediaPlayer!=null) {
-//           mediaPlayer.release();
-//           mediaPlayer=null;
-//       }
-  //  }
-
 
     @Override
     public void onDestroyView() {

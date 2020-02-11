@@ -28,9 +28,8 @@ public class ServicePlayer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        mPathToSong = intent.getIntExtra(SONG ,R.raw.moby_flower);//!!!!
-
-        mPlayer = MediaPlayer.create(this, mPathToSong);//!!!!
+        mPathToSong = intent.getIntExtra(SONG ,R.raw.moby_flower);
+        mPlayer = MediaPlayer.create(this, mPathToSong);
         return mBinder;
     }
 
@@ -41,17 +40,12 @@ public class ServicePlayer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // !!!!!
-       // playMusic();
-
-
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //stopMusic();
     }
 
     public void playMusic() {

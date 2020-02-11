@@ -2,16 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-<!--    <fragment-->
-<!--        android:id="@+id/fragment_player"-->
-<!--        android:name="com.suslovalex.view.fragment.PlayerFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        tools:layout="@layout/fragment"-->
-<!--         />-->
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
