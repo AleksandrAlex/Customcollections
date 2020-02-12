@@ -11,19 +11,19 @@
 
     <TextView
         android:id="@+id/song"
-        android:text="song"
+        android:text="song: Fire"
         android:layout_width="match_parent"
         android:layout_height="40dp"/>
 
     <TextView
         android:id="@+id/artist"
-        tools:text="artist"
+        android:text="artist: Kassabian"
         android:layout_width="match_parent"
         android:layout_height="40dp"/>
 
     <TextView
         android:id="@+id/genre"
-        tools:text="genre"
+        android:text="genre: Rock Music"
         android:layout_width="match_parent"
         android:layout_height="40dp"/>
 

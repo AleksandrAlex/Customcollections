@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.service.ServicePlayer;
 
+import static com.suslovalex.service.ServicePlayer.POSITION;
 import static com.suslovalex.view.activity.PlayerActivity.SONG;
 
 public class PlayerFragment extends Fragment implements View.OnClickListener {
@@ -45,6 +46,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         public void onServiceConnected(ComponentName name, IBinder service) {
             ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
             mServicePlayer = playerBinder.getPlayer();
+            mServicePlayer.loadMusic();
+            mServicePlayer.playMusic();
             mBound = true;
         }
 
@@ -81,15 +84,33 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.playBtn:
-                mServicePlayer.playMusic();
+                Thread thread1 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mServicePlayer.playMusic();
+                    }
+                });
+                thread1.start();
                 break;
 
             case R.id.pauseBtn:
-                mServicePlayer.pauseMusic();
+                Thread thread2 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mServicePlayer.pauseMusic();
+                    }
+                });
+                thread2.start();
                 break;
 
             case R.id.stopBtn:
-                mServicePlayer.stopMusic();
+                Thread thread3 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mServicePlayer.stopMusic();
+                    }
+                });
+                thread3.start();
                 break;
         }
     }
@@ -97,6 +118,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mServicePlayer.saveMusic();
         if (mBound) {
             getContext().unbindService(mServiceConnection);
             mBound = false;
