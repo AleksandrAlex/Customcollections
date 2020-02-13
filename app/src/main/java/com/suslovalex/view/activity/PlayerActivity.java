@@ -22,7 +22,7 @@ public class PlayerActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PlayerFragment fragment = new PlayerFragment();
-        fragment.setSongId(R.raw.kassabian_fire);
+        fragment.setSongId(R.raw.kassabian__fire);
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
     }

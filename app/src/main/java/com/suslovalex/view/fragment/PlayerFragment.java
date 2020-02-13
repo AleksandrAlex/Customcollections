@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.service.ServicePlayer;
 
-import static com.suslovalex.service.ServicePlayer.POSITION;
 import static com.suslovalex.view.activity.PlayerActivity.SONG;
 
 public class PlayerFragment extends Fragment implements View.OnClickListener {
@@ -63,7 +62,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment, container, false);
         bindViews(v);
         mIntent = new Intent(getContext(),ServicePlayer.class);
-        mIntent.putExtra(SONG, R.raw.kassabian_fire);
+        mIntent.putExtra(SONG, R.raw.kassabian__fire);
         getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
         return v;
     }

@@ -32,7 +32,7 @@ public class ServicePlayer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        mPathToSong = intent.getIntExtra(SONG ,R.raw.moby_flower);
+        mPathToSong = intent.getIntExtra(SONG ,R.raw.moby__flower);
         mPlayer = MediaPlayer.create(this, mPathToSong);
         return mBinder;
     }
@@ -54,7 +54,7 @@ public class ServicePlayer extends Service {
 
     public void playMusic() {
         if (mPlayer == null){
-            mPlayer = MediaPlayer.create(this,R.raw.kassabian_fire);
+            mPlayer = MediaPlayer.create(this,R.raw.kassabian__fire);
         }
         mPlayer.start();
     }
