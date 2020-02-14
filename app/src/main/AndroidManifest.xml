@@ -21,6 +21,7 @@
         </activity>
         <service android:name="com.suslovalex.service.ServicePlayer"
             android:exported="false"></service>
+        <activity android:name="com.suslovalex.view.activity.SelectActivity"></activity>
     </application>
 
 </manifest>

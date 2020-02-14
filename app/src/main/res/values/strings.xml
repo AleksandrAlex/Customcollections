@@ -6,4 +6,23 @@
     <string name="play">play</string>
     <string name="pause">pause</string>
     <string name="stop">stop</string>
+    <string name="selectArtist">Select Artist</string>
+    <string-array name="artists">
+        <item>Kassabian</item>
+        <item>Imagine Dragons</item>
+        <item>Beatles</item>
+        <item>Coldplay</item>
+        <item>Korn</item>
+        <item>Linkin Park</item>
+        <item>Metallica</item>
+        <item>Ozzy Osbourne</item>
+        <item>Moby</item>
+        <item>Red Hot Chili Papers</item>
+        <item>Scorpions</item>
+        <item>Rihanna</item>
+    </string-array>
+    <string-array name="genres">
+        <item>Rock</item>
+        <item>Pop</item>
+    </string-array>
 </resources>
