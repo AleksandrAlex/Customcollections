@@ -17,7 +17,7 @@ public class SongDatabase extends SQLiteOpenHelper {
     private static final String FIELD_TITLE = "TITLE";
     private static final String FIELD_PATH = "PATH";
 
-    SongDatabase (Context context){
+    public SongDatabase(Context context){
         super(context, NAME_DATA_BASE,null,VERSION_DB);
     }
 
@@ -69,4 +69,5 @@ public class SongDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
 }
