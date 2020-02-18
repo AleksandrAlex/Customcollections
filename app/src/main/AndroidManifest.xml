@@ -23,8 +23,8 @@
             android:exported="false"></service>
         <activity android:name="com.suslovalex.view.activity.SelectActivity"></activity>
         <provider
-            android:authorities="com.suslovalex.model.SongDatabase"
-            android:name=".provider.ProviderDB"/>
+            android:authorities="com.suslovalex.provider"
+            android:name="com.suslovalex.provider.ProviderDB"/>
     </application>
 
 </manifest>
