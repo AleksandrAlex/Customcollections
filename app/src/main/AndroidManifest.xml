@@ -9,19 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.suslovalex.view.activity.PlayerActivity">
+        <activity android:name="com.suslovalex.view.activity.PlayerActivity"/>
+        <activity android:name="com.suslovalex.view.activity.MainMenuActivity"/>
+        <activity android:name="com.suslovalex.view.activity.SelectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.suslovalex.view.activity.MainMenuActivity">
-
-        </activity>
         <service android:name="com.suslovalex.service.ServicePlayer"
             android:exported="false"></service>
-        <activity android:name="com.suslovalex.view.activity.SelectActivity"></activity>
         <provider
             android:authorities="com.suslovalex.provider"
             android:name="com.suslovalex.provider.ProviderDB"/>
