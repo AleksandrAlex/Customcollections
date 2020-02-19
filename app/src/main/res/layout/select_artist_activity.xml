@@ -15,6 +15,12 @@
         android:layout_height="40dp"
         android:entries="@array/genres"
         android:spinnerMode="dialog"/>
+    <Button
+        android:id="@+id/showBtn"
+        android:text="Show selected points"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/select_recycler_view"

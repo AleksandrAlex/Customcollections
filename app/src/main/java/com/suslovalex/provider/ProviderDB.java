@@ -12,6 +12,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.suslovalex.customcollections.R;
+import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
 
 public class ProviderDB extends ContentProvider {
@@ -39,27 +41,18 @@ public class ProviderDB extends ContentProvider {
     @Override
     public boolean onCreate() {
         mSongDatabaseHelper = new SongDatabaseHelper(getContext());
-        return true;
-    }
+      // if (mSongDatabaseHelper == null)
+      //     insertSongs(mSongDatabaseHelper, new Song("The Beatles", "Pop", "Let it be", R.raw.beatles__let_it_be));
+      //     insertSongs(mSongDatabaseHelper, new Song("Scorpions", "Rock", "We were born to fly", R.raw.scorpions__we_were_born_to_fly));
+
+            return true;
+        }
 
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         mDatabase = mSongDatabaseHelper.getReadableDatabase();
-        Cursor cursor;
-        switch (uriMatcher.match(uri)){
-            case SONGS:
-                cursor = mDatabase.query(SongDatabaseHelper.TABLE_NAME, projection,selection,selectionArgs,
-                        null, null,sortOrder);
-                break;
-            case SONGS_ID:
-                cursor = mDatabase.query(SongDatabaseHelper.TABLE_NAME,projection,
-                        SongDatabaseHelper.FIELD_ID+"=?",
-                        new String[]{String.valueOf(ContentUris.parseId(uri))},null,null,sortOrder);
-                break;
-                default: throw new IllegalArgumentException("Wrong query ! ! ! "+uri);
-        }
-        //Content Resolver?????
+        Cursor cursor = mDatabase.query(SongDatabaseHelper.TABLE_NAME,projection,selection,selectionArgs,null,null,null);
         return cursor;
     }
 
@@ -78,8 +71,10 @@ public class ProviderDB extends ContentProvider {
         mDatabase = mSongDatabaseHelper.getWritableDatabase();
         long rowID = mDatabase.insert(SongDatabaseHelper.TABLE_NAME, null, values);
         Uri resultUri = ContentUris.withAppendedId(SONG_CONTENT_URI, rowID);
-        getContext().getContentResolver().notifyChange(resultUri, null);
+        //getContext().getContentResolver().notifyChange(resultUri, null);
+        //Log.d(TAG, values.t);
         return resultUri;
+
     }
 
     @Override
@@ -91,4 +86,8 @@ public class ProviderDB extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         return 0;
     }
+
+//   private void insertSongs(SongDatabaseHelper mSongDatabaseHelper, Song song) {
+//       ContentValues contentValues = new ContentValues();
+//   }
 }

@@ -8,6 +8,7 @@
     <string name="stop">stop</string>
     <string name="selectArtist">Select Artist</string>
     <string-array name="artists">
+        <item>-ALL-</item>
         <item>Kassabian</item>
         <item>Imagine Dragons</item>
         <item>Beatles</item>
@@ -22,6 +23,7 @@
         <item>Rihanna</item>
     </string-array>
     <string-array name="genres">
+        <item>-ALL-</item>
         <item>Rock</item>
         <item>Pop</item>
     </string-array>

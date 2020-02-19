@@ -1,26 +1,29 @@
 package com.suslovalex.model;
 
+import androidx.annotation.NonNull;
+
 public class Song {
     private int mId;
     private String mArtist;
     private String mGenre;
     private String mTitle;
-    private String mPath;
+    private int mPath;
 
-    public Song(int id, String artist, String genre, String title, String path) {
-        mId = mId;
+    public Song(int id, String artist, String genre, String title, int path) {
+        mId = id;
         mArtist = artist;
         mGenre = genre;
         mTitle = title;
         mPath = path;
     }
 
-    public Song(String artist, String genre, String title, String path) {
-        mArtist = artist;
-        mGenre = genre;
-        mTitle = title;
-        mPath = path;
-    }
+//  public Song(String artist, String genre, String title, int path) {
+//      mId++;
+//      mArtist = artist;
+//      mGenre = genre;
+//      mTitle = title;
+//      mPath = path;
+//  }
 
     public int getId() {
         return mId;
@@ -42,23 +45,33 @@ public class Song {
         return mGenre;
     }
 
-    public void setmGenre(String mGenre) {
-        this.mGenre = mGenre;
+    public void setGenre(String genre) {
+        mGenre = genre;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setTitle(String title) {
+        mTitle = title;
     }
 
-    public String getmPath() {
+    public int getPath() {
         return mPath;
     }
 
-    public void setmPath(String mPath) {
-        this.mPath = mPath;
+    public void setmPath(int path) {
+        mPath = path;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "ID: " + getId()
+                + "Artist: " + getArtist()
+                + "Genre: " + getGenre()
+                + "Title: " + getTitle()
+                + "Path: " + getPath();
     }
 }
