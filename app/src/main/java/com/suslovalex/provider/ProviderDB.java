@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +16,12 @@ import com.suslovalex.model.SongDatabaseHelper;
 
 public class ProviderDB extends ContentProvider {
 
+    private static final String LOG_TAG = "MyLog";
     private SQLiteDatabase mDatabase;
     private SongDatabaseHelper mSongDatabaseHelper;
     private static final String SCHEME = "content://";
     private static final String AUTHORITY = "com.suslovalex.provider";
-    private static final Uri BASE_CONTENT_URI = Uri.parse(SCHEME + AUTHORITY);
+    private static final Uri SONG_CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + "/"+SongDatabaseHelper.TABLE_NAME);
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int SONGS = 1;
     private static final int SONGS_ID = 2;
@@ -57,8 +59,8 @@ public class ProviderDB extends ContentProvider {
                 break;
                 default: throw new IllegalArgumentException("Wrong query ! ! ! "+uri);
         }
+        //Content Resolver?????
         return cursor;
-
     }
 
     @Nullable
@@ -70,11 +72,14 @@ public class ProviderDB extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-    //  mDatabase = mSongDatabaseHelper.getWritableDatabase();
-    //  long rowID = mDatabase.insert(TABLE_NAME, null, values);
-    //  Uri resultUri = ContentUris.withAppendedId(SONG_CONTENT_URI, rowID);
-    //  getContext().getContentResolver().notifyChange(resultUri, null);
-        return null;
+        Log.d(LOG_TAG, "insert, " + uri.toString());
+        if (uriMatcher.match(uri) != SONGS)
+            throw new IllegalArgumentException("Wrong URI: " + uri);
+        mDatabase = mSongDatabaseHelper.getWritableDatabase();
+        long rowID = mDatabase.insert(SongDatabaseHelper.TABLE_NAME, null, values);
+        Uri resultUri = ContentUris.withAppendedId(SONG_CONTENT_URI, rowID);
+        getContext().getContentResolver().notifyChange(resultUri, null);
+        return resultUri;
     }
 
     @Override
