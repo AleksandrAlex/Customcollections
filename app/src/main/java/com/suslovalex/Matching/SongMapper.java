@@ -22,6 +22,26 @@ public class SongMapper {
         }
         return songList;
     }
+    public String[] matchCursorToGenre(Cursor cursor){
+        String [] genreArray = new String[cursor.getCount()+1];
+        // TODO: 19.02.2020 !!!!!
+        int columnGenreIndex = cursor.getColumnIndex(SongDatabaseHelper.FIELD_GENRE);
+            for (int i = 0; i < genreArray.length; i++) {
+                genreArray[i] = cursor.getColumnName(columnGenreIndex);
+                cursor.moveToNext();
+            }
+        return genreArray;
+    }
+    public String[] matchCursorToArtist(Cursor cursor){
+        String [] artistArray = new String[cursor.getCount()+1];
+        // TODO: 19.02.2020 !!!!!
+        int columnArtistIndex = cursor.getColumnIndex(SongDatabaseHelper.FIELD_ARTIST);
+        for (int i = 0; i < artistArray.length; i++) {
+            artistArray[i] = cursor.getColumnName(columnArtistIndex);
+            cursor.moveToNext();
+        }
+        return artistArray;
+    }
 
     private Song fromCursorToSong(Cursor cursor) {
             int columIdIndex = cursor.getColumnIndex(SongDatabaseHelper.FIELD_ID);

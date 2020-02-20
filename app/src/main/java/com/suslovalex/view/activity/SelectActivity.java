@@ -64,6 +64,14 @@ public class SelectActivity extends AppCompatActivity {
             }
         });
     }
+    private Cursor prepareGenerCursor(){
+        String[] protection = new String[]{SongDatabaseHelper.FIELD_GENRE};
+        return getContentResolver().query(URI, null, null,null,null);
+    }
+    private Cursor prepareArtistCursor(){
+        String[] protection = new String[]{SongDatabaseHelper.FIELD_ARTIST};
+        return getContentResolver().query(URI, null, null,null,null);
+    }
 
     private Cursor prepareCursorClick() {
 
@@ -99,6 +107,8 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void setSpinnersAdapters() {
+        Cursor cursor = prepareArtistCursor(); // уже с уникальными записями
+        String [] array = mSongMapper.matchCursorToArtist(cursor);
         //  ArrayAdapter<?> artistAdapter = ArrayAdapter.createFromResource(this, R.array.artists,
         //          android.R.layout.simple_spinner_item);
         //  artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
