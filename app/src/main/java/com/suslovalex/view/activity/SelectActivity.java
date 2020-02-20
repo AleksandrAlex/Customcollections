@@ -1,7 +1,6 @@
 package com.suslovalex.view.activity;
 
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -65,7 +63,7 @@ public class SelectActivity extends AppCompatActivity {
         });
     }
 
-    private Cursor prepareGenerCursor() {
+    private Cursor prepareGenreCursor() {
         String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_GENRE};
         return getContentResolver().query(URI, projection, null, null, null);
     }
@@ -97,10 +95,7 @@ public class SelectActivity extends AppCompatActivity {
         }
 
         return getContentResolver().query(URI, protection, selection, selectionArgs, null);
-
     }
-
-
     private void initialization() {
         initializeViews();
         initializeParametres();
@@ -109,24 +104,26 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void setSpinnersAdapters() {
+        setArtistSpinnerAdapter();
+        setGenreSpinnerAdapter();
+    }
+
+    private void setGenreSpinnerAdapter() {
+        Cursor cursor = prepareGenreCursor(); // уже с уникальными записями
+        String[] array = mSongMapper.matchCursorToGenre(cursor);
+        ArrayAdapter<?> genreAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
+        genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mGenreSpinner.setAdapter(genreAdapter);
+        cursor.close();
+    }
+
+    private void setArtistSpinnerAdapter() {
         Cursor cursor = prepareArtistCursor(); // уже с уникальными записями
         String[] array = mSongMapper.matchCursorToArtist(cursor);
         ArrayAdapter<?> artistAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mArtistSpinner.setAdapter(artistAdapter);
-
-
-        //  ArrayAdapter<?> artistAdapter = ArrayAdapter.createFromResource(this, R.array.artists,
-        //          android.R.layout.simple_spinner_item);
-        //  artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-        //  mArtistSpinner.setAdapter(artistAdapter);
-
-
-        //  ArrayAdapter<?> genreAdapter = ArrayAdapter.createFromResource(this,
-        //          R.array.genres, android.R.layout.simple_spinner_item);
-        //  genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //  mGenreSpinner.setAdapter(genreAdapter);
+        cursor.close();
     }
 
     private void initializeParametres() {

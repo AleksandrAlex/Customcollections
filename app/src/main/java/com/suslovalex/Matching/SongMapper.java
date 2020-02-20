@@ -26,11 +26,12 @@ public class SongMapper {
 
     public String[] matchCursorToGenre(Cursor cursor) {
         String[] genreArray = new String[cursor.getCount() + 1];
-        // TODO: 19.02.2020 !!!!!
+        genreArray[0] = "ALL";
         int columnGenreIndex = cursor.getColumnIndex(SongDatabaseHelper.FIELD_GENRE);
-        for (int i = 0; i < genreArray.length; i++) {
-            genreArray[i] = cursor.getColumnName(columnGenreIndex);
-            cursor.moveToNext();
+        int count = 1;
+        while (cursor.moveToNext()) {
+            genreArray[count] = cursor.getString(columnGenreIndex);
+            count++;
         }
         return genreArray;
     }
