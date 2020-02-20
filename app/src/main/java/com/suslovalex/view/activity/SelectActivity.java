@@ -64,13 +64,15 @@ public class SelectActivity extends AppCompatActivity {
             }
         });
     }
-    private Cursor prepareGenerCursor(){
-        String[] protection = new String[]{SongDatabaseHelper.FIELD_GENRE};
-        return getContentResolver().query(URI, null, null,null,null);
+
+    private Cursor prepareGenerCursor() {
+        String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_GENRE};
+        return getContentResolver().query(URI, projection, null, null, null);
     }
-    private Cursor prepareArtistCursor(){
-        String[] protection = new String[]{SongDatabaseHelper.FIELD_ARTIST};
-        return getContentResolver().query(URI, null, null,null,null);
+
+    private Cursor prepareArtistCursor() {
+        String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_ARTIST};
+        return getContentResolver().query(URI, projection, null, null, null);
     }
 
     private Cursor prepareCursorClick() {
@@ -87,11 +89,11 @@ public class SelectActivity extends AppCompatActivity {
             selection = SongDatabaseHelper.FIELD_GENRE + "=?";
             selectionArgs = new String[]{mSelectGenre};
         } else if (mSelectGenre.equals("ALL")) {
-            selection = SongDatabaseHelper.FIELD_ARTIST +"=?";
+            selection = SongDatabaseHelper.FIELD_ARTIST + "=?";
             selectionArgs = new String[]{mSelectArtist};
-        } else{
+        } else {
             selection = SongDatabaseHelper.FIELD_ARTIST + "=?" + " AND " + SongDatabaseHelper.FIELD_GENRE + "=?";
-            selectionArgs = new String[]{mSelectArtist,mSelectGenre};
+            selectionArgs = new String[]{mSelectArtist, mSelectGenre};
         }
 
         return getContentResolver().query(URI, protection, selection, selectionArgs, null);
@@ -108,7 +110,12 @@ public class SelectActivity extends AppCompatActivity {
 
     private void setSpinnersAdapters() {
         Cursor cursor = prepareArtistCursor(); // уже с уникальными записями
-        String [] array = mSongMapper.matchCursorToArtist(cursor);
+        String[] array = mSongMapper.matchCursorToArtist(cursor);
+        ArrayAdapter<?> artistAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
+        artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mArtistSpinner.setAdapter(artistAdapter);
+
+
         //  ArrayAdapter<?> artistAdapter = ArrayAdapter.createFromResource(this, R.array.artists,
         //          android.R.layout.simple_spinner_item);
         //  artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -128,6 +135,7 @@ public class SelectActivity extends AppCompatActivity {
 
     private void addDataToDB() {
         final Cursor cursor = getContentResolver().query(URI, null, null, null, null);
+        if (cursor == null) return;
         if (cursor.getCount() > 0) {
             Log.d(TAG, "Amount of notes is " + cursor.getCount());
         } else {
