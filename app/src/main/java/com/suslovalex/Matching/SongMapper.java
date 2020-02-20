@@ -12,7 +12,7 @@ public class SongMapper {
     public SongMapper() {
     }
 
-    public List<Song> matchCursorToSongsList(Cursor cursor) {
+    public List<Song> mappCursorToSongsList(Cursor cursor) {
         List<Song> songList = new ArrayList<>();
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
@@ -24,7 +24,7 @@ public class SongMapper {
         return songList;
     }
 
-    public String[] matchCursorToGenre(Cursor cursor) {
+    public String[] mappCursorToGenre(Cursor cursor) {
         String[] genreArray = new String[cursor.getCount() + 1];
         genreArray[0] = "ALL";
         int columnGenreIndex = cursor.getColumnIndex(SongDatabaseHelper.FIELD_GENRE);
@@ -36,7 +36,7 @@ public class SongMapper {
         return genreArray;
     }
 
-    public String[] matchCursorToArtist(Cursor cursor) {
+    public String[] mappCursorToArtist(Cursor cursor) {
         String[] artistArray = new String[cursor.getCount() + 1];
         artistArray[0] = "ALL";
         int columnArtistIndex = cursor.getColumnIndex(SongDatabaseHelper.FIELD_ARTIST);

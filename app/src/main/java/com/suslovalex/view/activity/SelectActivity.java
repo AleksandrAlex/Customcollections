@@ -16,13 +16,16 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
+import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectActivity extends AppCompatActivity {
@@ -32,19 +35,24 @@ public class SelectActivity extends AppCompatActivity {
     private static final Uri URI = Uri.parse("content://com.suslovalex.provider/My_Songs");
     private Spinner mArtistSpinner;
     private Spinner mGenreSpinner;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mSelectSongRecyclerView;
     private Button mShowButton;
     private String mSelectArtist = ALL;
     private String mSelectGenre = ALL;
     private SongMapper mSongMapper;
     private SQLiteDatabase mDatabase;
     private SongDatabaseHelper mSongDatabaseHelper;
+    private List<Song> mSongs;
+    private SelectSongRecyclerAdapter mSongRecyclerAdapter;
+    private RecyclerView.LayoutManager mLinearLayoutManager;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_artist_activity);
+        setContentView(R.layout.select_song_activity);
         addDataToDB();
         initialization();
     }
@@ -55,9 +63,13 @@ public class SelectActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Cursor cursorClick = prepareCursorClick();
-                List<Song> listSongByClick = mSongMapper.matchCursorToSongsList(cursorClick);
-                for (Song song : listSongByClick) {
+                mSongs = mSongMapper.mappCursorToSongsList(cursorClick);
+                mSongRecyclerAdapter.setSongs(mSongs);
+                mSongRecyclerAdapter.notifyDataSetChanged();
+
+                for (Song song : mSongs) {
                     Log.d(TAG, song.toString());
+
                 }
             }
         });
@@ -101,16 +113,25 @@ public class SelectActivity extends AppCompatActivity {
         initializeParametres();
         setViewElementsListeners();
         setSpinnersAdapters();
+        setRecyclerParametres();
+    }
+
+    private void setRecyclerParametres() {
+        mSelectSongRecyclerView.setAdapter(mSongRecyclerAdapter);
+        mSelectSongRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mSelectSongRecyclerView.setHasFixedSize(true);
     }
 
     private void setSpinnersAdapters() {
+        mArtistSpinner.setPrompt("Sorting by artist");
+        mGenreSpinner.setPrompt("Sorting by title");
         setArtistSpinnerAdapter();
         setGenreSpinnerAdapter();
     }
 
     private void setGenreSpinnerAdapter() {
         Cursor cursor = prepareGenreCursor(); // уже с уникальными записями
-        String[] array = mSongMapper.matchCursorToGenre(cursor);
+        String[] array = mSongMapper.mappCursorToGenre(cursor);
         ArrayAdapter<?> genreAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mGenreSpinner.setAdapter(genreAdapter);
@@ -119,7 +140,7 @@ public class SelectActivity extends AppCompatActivity {
 
     private void setArtistSpinnerAdapter() {
         Cursor cursor = prepareArtistCursor(); // уже с уникальными записями
-        String[] array = mSongMapper.matchCursorToArtist(cursor);
+        String[] array = mSongMapper.mappCursorToArtist(cursor);
         ArrayAdapter<?> artistAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mArtistSpinner.setAdapter(artistAdapter);
@@ -128,6 +149,10 @@ public class SelectActivity extends AppCompatActivity {
 
     private void initializeParametres() {
         mSongMapper = new SongMapper();
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mSongs = new ArrayList<>();
+        mSongRecyclerAdapter = new SelectSongRecyclerAdapter(mSongs);
+
     }
 
     private void addDataToDB() {
@@ -146,9 +171,7 @@ public class SelectActivity extends AppCompatActivity {
         mShowButton = findViewById(R.id.showBtn);
         mArtistSpinner = findViewById(R.id.spinnerArtist);
         mGenreSpinner = findViewById(R.id.spinnerGenre);
-        mRecyclerView = findViewById(R.id.select_recycler_view);
-        mArtistSpinner.setPrompt("Sorting by artist");
-        mGenreSpinner.setPrompt("Sorting by title");
+        mSelectSongRecyclerView = findViewById(R.id.select_song_recycler_view);
     }
 
     private void addSingleSongToDB(Song song) {
@@ -159,8 +182,6 @@ public class SelectActivity extends AppCompatActivity {
         contentValues.put(SongDatabaseHelper.FIELD_PATH, song.getPath());
 
         getContentResolver().insert(URI, contentValues);
-
-
     }
 
     private void initData() {
@@ -188,6 +209,4 @@ public class SelectActivity extends AppCompatActivity {
         addSingleSongToDB(new Song(22, "Scorpions", "Pop", "The Game Of Life", R.raw.scorpions_the_game_of_life));
 
     }
-
-
 }
