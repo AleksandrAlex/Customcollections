@@ -44,7 +44,7 @@ public class MainMenuActivity extends AppCompatActivity {
     /**
      * This method define some items
      */
-    private void prepareItemsData() {//!!!!for
+    private void prepareItemsData() {
 
         mMainMenuItems.add(new MainMenuItem("first"+ITEM,DESCRIPTION+"first item description",R.drawable.ic_android));
         mMainMenuItems.add(new MainMenuItem("second"+ITEM,DESCRIPTION+"second item description",R.drawable.ic_build));

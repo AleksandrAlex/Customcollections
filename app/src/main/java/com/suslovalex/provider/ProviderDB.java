@@ -11,16 +11,19 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.suslovalex.customcollections.R;
-import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
 
 public class ProviderDB extends ContentProvider {
 
+   private static final String DB_CREATE = "CREATE TABLE "
+            +SongDatabaseHelper.TABLE_NAME+" ("
+            +SongDatabaseHelper.FIELD_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +SongDatabaseHelper.FIELD_ARTIST +" TEXT, "
+            +SongDatabaseHelper.FIELD_GENRE+" TEXT, "
+            +SongDatabaseHelper.FIELD_TITLE+" TEXT, "
+            +SongDatabaseHelper.FIELD_PATH+" INTEGER);";
+
     private static final String LOG_TAG = "MyLog";
-    private SQLiteDatabase mDatabase;
-    private SongDatabaseHelper mSongDatabaseHelper;
     private static final String SCHEME = "content://";
     private static final String AUTHORITY = "com.suslovalex.provider";
     public static final Uri SONG_CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + "/"+SongDatabaseHelper.TABLE_NAME);
@@ -31,20 +34,12 @@ public class ProviderDB extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, SongDatabaseHelper.TABLE_NAME, SONGS);
         uriMatcher.addURI(AUTHORITY, SongDatabaseHelper.TABLE_NAME + "/#", SONGS_ID);
     }
-
-    static final String DB_CREATE = "CREATE TABLE "+SongDatabaseHelper.TABLE_NAME+" ("+ SongDatabaseHelper.FIELD_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
-            +SongDatabaseHelper.FIELD_ARTIST +" TEXT, "
-            +SongDatabaseHelper.FIELD_GENRE+" TEXT, "
-            +SongDatabaseHelper.FIELD_TITLE+" TEXT, "
-            +SongDatabaseHelper.FIELD_PATH+" INTEGER);";
+    private SQLiteDatabase mDatabase;
+    private SongDatabaseHelper mSongDatabaseHelper;
 
     @Override
     public boolean onCreate() {
         mSongDatabaseHelper = new SongDatabaseHelper(getContext());
-      // if (mSongDatabaseHelper == null)
-      //     insertSongs(mSongDatabaseHelper, new Song("The Beatles", "Pop", "Let it be", R.raw.beatles__let_it_be));
-      //     insertSongs(mSongDatabaseHelper, new Song("Scorpions", "Rock", "We were born to fly", R.raw.scorpions__we_were_born_to_fly));
-
             return true;
         }
 
@@ -71,10 +66,7 @@ public class ProviderDB extends ContentProvider {
         mDatabase = mSongDatabaseHelper.getWritableDatabase();
         long rowID = mDatabase.insert(SongDatabaseHelper.TABLE_NAME, null, values);
         Uri resultUri = ContentUris.withAppendedId(SONG_CONTENT_URI, rowID);
-        //getContext().getContentResolver().notifyChange(resultUri, null);
-        //Log.d(TAG, values.t);
         return resultUri;
-
     }
 
     @Override
@@ -86,8 +78,4 @@ public class ProviderDB extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         return 0;
     }
-
-//   private void insertSongs(SongDatabaseHelper mSongDatabaseHelper, Song song) {
-//       ContentValues contentValues = new ContentValues();
-//   }
 }

@@ -18,8 +18,9 @@ public class ServicePlayer extends Service {
     public static int CURRENT_SONG_POSITION;
     public static final String POSITION = "current position";
     private MediaPlayer mPlayer;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences mSharedPreferences;
     private final IBinder mBinder = new PlayerBinder();
+    private int mPathToSong;
 
     public class PlayerBinder extends Binder{
 
@@ -31,13 +32,16 @@ public class ServicePlayer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        // two bloks
-        int pathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH ,-1);
-        if (pathToSong==-1){
-            pathToSong = R.raw.ozzy_osbourne__i_just_want_you;
-        }
-        mPlayer = MediaPlayer.create(getApplicationContext(), pathToSong);
+        getPathToSong(intent);
+        mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
         return mBinder;
+    }
+
+    private void getPathToSong(Intent intent) {
+            mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH ,-1);
+            if (mPathToSong==-1){
+            mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
+        }
     }
 
     @Override
@@ -77,16 +81,15 @@ public class ServicePlayer extends Service {
 
     public void saveMusic(){
         CURRENT_SONG_POSITION = mPlayer.getCurrentPosition();
-        sharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        mSharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(POSITION, CURRENT_SONG_POSITION);
         editor.commit();
     }
 
     public void loadMusic(){
-        sharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
-        int loadCurrentSongPosition = sharedPreferences.getInt(POSITION,0);
+        mSharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
+        int loadCurrentSongPosition = mSharedPreferences.getInt(POSITION,0);
         mPlayer.seekTo(loadCurrentSongPosition);
-
     }
 }

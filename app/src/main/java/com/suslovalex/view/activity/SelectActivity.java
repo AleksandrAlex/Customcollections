@@ -40,13 +40,9 @@ public class SelectActivity extends AppCompatActivity {
     private String mSelectArtist = ALL;
     private String mSelectGenre = ALL;
     private SongMapper mSongMapper;
-    private SQLiteDatabase mDatabase;
-    private SongDatabaseHelper mSongDatabaseHelper;
     private List<Song> mSongs;
     private SelectSongRecyclerAdapter mSongRecyclerAdapter;
     private RecyclerView.LayoutManager mLinearLayoutManager;
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -61,7 +57,6 @@ public class SelectActivity extends AppCompatActivity {
         mShowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Cursor cursorClick = prepareCursorClick();
                 mSongs = mSongMapper.mappCursorToSongsList(cursorClick);
                 mSongRecyclerAdapter.setSongs(mSongs);
@@ -69,7 +64,6 @@ public class SelectActivity extends AppCompatActivity {
 
                 for (Song song : mSongs) {
                     Log.d(TAG, song.toString());
-
                 }
             }
         });
@@ -139,7 +133,7 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void setArtistSpinnerAdapter() {
-        Cursor cursor = prepareArtistCursor(); // уже с уникальными записями
+        Cursor cursor = prepareArtistCursor();
         String[] array = mSongMapper.mappCursorToArtist(cursor);
         ArrayAdapter<?> artistAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -167,7 +161,6 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        // TODO: 19.02.2020 write all View el.
         mShowButton = findViewById(R.id.showBtn);
         mArtistSpinner = findViewById(R.id.spinnerArtist);
         mGenreSpinner = findViewById(R.id.spinnerGenre);

@@ -51,7 +51,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
             mServicePlayer = playerBinder.getPlayer();
             mServicePlayer.loadMusic();
-            mServicePlayer.playMusic();
             mBound = true;
         }
 
@@ -66,12 +65,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment, container, false);
         bindViews(v);
-        mIntent = new Intent(getContext(), ServicePlayer.class);
         mSongPath = getSongPathFromDB();
+        putIntentToService();
+        bindService();
+        return v;
+    }
+
+    private void putIntentToService() {
+        mIntent = new Intent(getContext(), ServicePlayer.class);
         mIntent.putExtra(INTENT_KEY_SONG_PATH, mSongPath);
+    }
+
+    private void bindService() {
         if (getContext() != null)
             getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        return v;
     }
 
     private int getSongPathFromDB() {
@@ -94,24 +101,29 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 }
                 cursor.close();
             }
-
         }
-
         return songPath;
     }
 
     private void bindViews(View view) {
-        //initialize
+        initializeViewByID(view);
+        setButtonListeners();
+
+    }
+
+    private void setButtonListeners() {
+        mPlay.setOnClickListener(this);
+        mStop.setOnClickListener(this);
+        mPause.setOnClickListener(this);
+    }
+
+    private void initializeViewByID(View view) {
         mSong = view.findViewById(R.id.song);
         mArtist = view.findViewById(R.id.artist);
         mGenre = view.findViewById(R.id.genre);
         mPlay = view.findViewById(R.id.playBtn);
         mPause = view.findViewById(R.id.pauseBtn);
         mStop = view.findViewById(R.id.stopBtn);
-        // listeners
-        mPlay.setOnClickListener(this);
-        mStop.setOnClickListener(this);
-        mPause.setOnClickListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
