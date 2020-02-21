@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,10 +19,16 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
+import com.suslovalex.model.Song;
+import com.suslovalex.model.SongDatabaseHelper;
 import com.suslovalex.service.ServicePlayer;
 
-import static com.suslovalex.view.activity.PlayerActivity.SONG;
+import java.util.List;
+
+import static com.suslovalex.provider.ProviderDB.SONG_CONTENT_URI;
+import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
 public class PlayerFragment extends Fragment implements View.OnClickListener {
 
@@ -35,10 +42,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private ServicePlayer mServicePlayer;
     private boolean mBound = false;
     private int mSongId;
+    private int mSongPath;
 
-    public void setSongId(int songId) {
-        mSongId = songId;
-    }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -61,18 +66,49 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment, container, false);
         bindViews(v);
-        mIntent = new Intent(getContext(),ServicePlayer.class);
-        mIntent.putExtra(SONG, R.raw.kassabian__fire);
-        getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        mIntent = new Intent(getContext(), ServicePlayer.class);
+        mSongPath = getSongPathFromDB();
+        mIntent.putExtra(INTENT_KEY_SONG_PATH, mSongPath);
+        if (getContext() != null)
+            getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
         return v;
     }
+
+    private int getSongPathFromDB() {
+        int songPath = -1;
+        if (getContext() != null) {
+            Cursor cursor = getContext().getContentResolver()
+                    .query(SONG_CONTENT_URI,
+                            null,
+                            SongDatabaseHelper.FIELD_ID + "=?",
+                            new String[]{String.valueOf(mSongId)},
+                            null);
+            SongMapper mapper = new SongMapper();// class
+            if (cursor != null) {
+                List<Song> listSong = mapper.mappCursorToSongsList(cursor);
+                for (Song song : listSong) {
+                    int id = song.getId();
+                    if (id == mSongId) {
+                        songPath = song.getPath();
+                    }
+                }
+                cursor.close();
+            }
+
+        }
+
+        return songPath;
+    }
+
     private void bindViews(View view) {
+        //initialize
         mSong = view.findViewById(R.id.song);
         mArtist = view.findViewById(R.id.artist);
         mGenre = view.findViewById(R.id.genre);
         mPlay = view.findViewById(R.id.playBtn);
         mPause = view.findViewById(R.id.pauseBtn);
         mStop = view.findViewById(R.id.stopBtn);
+        // listeners
         mPlay.setOnClickListener(this);
         mStop.setOnClickListener(this);
         mPause.setOnClickListener(this);
@@ -119,8 +155,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         super.onDestroyView();
         mServicePlayer.saveMusic();
         if (mBound) {
-            getContext().unbindService(mServiceConnection);
+            if (getContext() != null)
+                getContext().unbindService(mServiceConnection);
             mBound = false;
         }
+    }
+
+    public void setSongId(int songId) {
+        mSongId = songId;
     }
 }

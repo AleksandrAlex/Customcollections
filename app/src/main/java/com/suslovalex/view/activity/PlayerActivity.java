@@ -12,31 +12,37 @@ import android.view.View;
 import android.widget.Button;
 
 import com.suslovalex.customcollections.R;
+import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.fragment.PlayerFragment;
 
 
 public class PlayerActivity extends AppCompatActivity {
 
-    public final static String SONG = "song";
-    private Button mSelect;
+    public final static String INTENT_KEY_SONG_PATH = "intent_key_song_path";
+    private int mSongId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        initSongId();
+        createFragment();
+    }
+
+    private void initSongId() {
+        Intent intentFromSelectActivity = getIntent();
+        mSongId = intentFromSelectActivity.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, -1);
+        if (mSongId == -1){
+            finish();
+        }
+    }
+
+    private void createFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PlayerFragment fragment = new PlayerFragment();
-        fragment.setSongId(R.raw.kassabian__fire);
+        fragment.setSongId(mSongId);
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
-        mSelect = findViewById(R.id.select_artist);
-        mSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlayerActivity.this, SelectActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

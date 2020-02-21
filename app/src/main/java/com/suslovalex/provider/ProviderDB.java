@@ -23,7 +23,7 @@ public class ProviderDB extends ContentProvider {
     private SongDatabaseHelper mSongDatabaseHelper;
     private static final String SCHEME = "content://";
     private static final String AUTHORITY = "com.suslovalex.provider";
-    private static final Uri SONG_CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + "/"+SongDatabaseHelper.TABLE_NAME);
+    public static final Uri SONG_CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + "/"+SongDatabaseHelper.TABLE_NAME);
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int SONGS = 1;
     private static final int SONGS_ID = 2;

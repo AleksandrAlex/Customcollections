@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.suslovalex.customcollections.R;
 
-import static com.suslovalex.view.activity.PlayerActivity.SONG;
+import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
 public class ServicePlayer extends Service {
 
@@ -19,7 +19,6 @@ public class ServicePlayer extends Service {
     public static final String POSITION = "current position";
     private MediaPlayer mPlayer;
     private SharedPreferences sharedPreferences;
-    private int mPathToSong;
     private final IBinder mBinder = new PlayerBinder();
 
     public class PlayerBinder extends Binder{
@@ -32,8 +31,12 @@ public class ServicePlayer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        mPathToSong = intent.getIntExtra(SONG ,R.raw.moby__flower);
-        mPlayer = MediaPlayer.create(this, mPathToSong);
+        // two bloks
+        int pathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH ,-1);
+        if (pathToSong==-1){
+            pathToSong = R.raw.ozzy_osbourne__i_just_want_you;
+        }
+        mPlayer = MediaPlayer.create(getApplicationContext(), pathToSong);
         return mBinder;
     }
 

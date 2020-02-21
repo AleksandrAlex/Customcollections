@@ -1,5 +1,7 @@
 package com.suslovalex.view.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
+import com.suslovalex.view.activity.PlayerActivity;
 
 
 import java.util.List;
 
 public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRecyclerAdapter.SelectSongViewHolder> {
-
+    public static final String INTENT_KEY_SONG_ID = "intent_key_song_id";
     private List<Song> mSongs;
 
     public SelectSongRecyclerAdapter(List<Song> songs) {
@@ -32,9 +35,18 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
 
     @Override
     public void onBindViewHolder(@NonNull SelectSongViewHolder holder, int position) {
-        Song song = mSongs.get(position);
+        final Song song = mSongs.get(position);
         String textValue = song.getArtist() + " - " + song.getTitle() + " - " + song.getGenre();
         holder.artist.setText(textValue);
+        holder.artist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //intent(id song)
+                Intent intent = new Intent(v.getContext(), PlayerActivity.class);
+                intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
+                v.getContext().startActivity(intent);
+            }
+        });
 
     }
 
