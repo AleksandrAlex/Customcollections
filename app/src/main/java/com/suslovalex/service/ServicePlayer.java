@@ -84,7 +84,7 @@ public class ServicePlayer extends Service {
         mSharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(POSITION, CURRENT_SONG_POSITION);
-        editor.commit();
+        editor.apply();
     }
 
     public void loadMusic(){

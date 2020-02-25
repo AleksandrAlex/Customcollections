@@ -24,6 +24,7 @@ import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
 import com.suslovalex.service.ServicePlayer;
+import com.suslovalex.view.activity.SelectActivity;
 
 import java.util.List;
 
@@ -38,7 +39,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button mPlay;
     private Button mPause;
     private Button mStop;
+    private Button mSelect;
     private Intent mIntent;
+    private Intent mIntentToSelectActivity;
     private ServicePlayer mServicePlayer;
     private boolean mBound = false;
     private int mSongId;
@@ -115,6 +118,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mPlay.setOnClickListener(this);
         mStop.setOnClickListener(this);
         mPause.setOnClickListener(this);
+        mSelect.setOnClickListener(this);
     }
 
     private void initializeViewByID(View view) {
@@ -124,6 +128,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mPlay = view.findViewById(R.id.playBtn);
         mPause = view.findViewById(R.id.pauseBtn);
         mStop = view.findViewById(R.id.stopBtn);
+        mSelect = view.findViewById(R.id.selectBtn);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -158,6 +163,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                     }
                 });
                 thread3.start();
+                break;
+
+            case R.id.selectBtn:
+                mIntentToSelectActivity = new Intent(getContext(), SelectActivity.class);
+                mServicePlayer.stopMusic();
+                startActivity(mIntentToSelectActivity);
+
                 break;
         }
     }

@@ -62,6 +62,7 @@ public class SelectActivity extends AppCompatActivity {
                 mSongRecyclerAdapter.setSongs(mSongs);
                 mSongRecyclerAdapter.notifyDataSetChanged();
 
+
                 for (Song song : mSongs) {
                     Log.d(TAG, song.toString());
                 }
@@ -151,9 +152,9 @@ public class SelectActivity extends AppCompatActivity {
 
     private void addDataToDB() {
         final Cursor cursor = getContentResolver().query(URI, null, null, null, null);
-        if (cursor == null) return;
+        if (cursor == null)
         if (cursor.getCount() > 0) {
-            Log.d(TAG, "Amount of notes is " + cursor.getCount());
+            Log.d(TAG, "Amount of return;notes is " + cursor.getCount());
         } else {
             initData();
         }

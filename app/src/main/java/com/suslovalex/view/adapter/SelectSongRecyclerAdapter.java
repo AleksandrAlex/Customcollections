@@ -20,6 +20,7 @@ import java.util.List;
 public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRecyclerAdapter.SelectSongViewHolder> {
     public static final String INTENT_KEY_SONG_ID = "intent_key_song_id";
     private List<Song> mSongs;
+    public static final String BROADCAST_ACTION = "com.suslovalex.myBroadcastReceiver";
 
     public SelectSongRecyclerAdapter(List<Song> songs) {
         mSongs = songs;
@@ -41,9 +42,15 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
         holder.artist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), PlayerActivity.class);
+
+               //Intent intent = new Intent(v.getContext(), PlayerActivity.class);
+               //intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
+               //v.getContext().startActivity(intent);
+
+                Intent intent = new Intent(BROADCAST_ACTION);
                 intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
-                v.getContext().startActivity(intent);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                v.getContext().sendBroadcast(intent);
             }
         });
 

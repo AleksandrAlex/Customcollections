@@ -7,6 +7,7 @@
     <string name="pause">pause</string>
     <string name="stop">stop</string>
     <string name="selectArtist">Select Artist</string>
+    <string name="selectSong">Select</string>
     <string-array name="artists">
         <item>ALL</item>
         <item>Kassabian</item>

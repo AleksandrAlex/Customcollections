@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="400dp"
     android:background="@android:color/darker_gray"
     android:padding="20dp"
     android:id="@+id/fragment_player"
@@ -58,5 +58,13 @@
             android:background="@drawable/ic_stop_music"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/selectBtn"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="@string/selectSong"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
