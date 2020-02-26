@@ -19,11 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <receiver android:name="com.suslovalex.reciever.SongReceiver"
+        <receiver android:name="com.suslovalex.receiver.SongReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.suslovalex.myBroadcastReceiver"/>
+                <action android:name="com.suslovalex.action.PLAYSONG"/>
             </intent-filter>
 
         </receiver>

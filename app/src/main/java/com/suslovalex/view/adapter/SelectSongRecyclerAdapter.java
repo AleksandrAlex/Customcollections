@@ -2,6 +2,7 @@ package com.suslovalex.view.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,8 @@ import java.util.List;
 public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRecyclerAdapter.SelectSongViewHolder> {
     public static final String INTENT_KEY_SONG_ID = "intent_key_song_id";
     private List<Song> mSongs;
-    public static final String BROADCAST_ACTION = "com.suslovalex.myBroadcastReceiver";
+    public static final String BROADCAST_ACTION = "com.suslovalex.action.PLAYSONG";
+    private final String TAG = SelectSongRecyclerAdapter.class.getSimpleName();
 
     public SelectSongRecyclerAdapter(List<Song> songs) {
         mSongs = songs;
@@ -47,10 +49,12 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
                //intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
                //v.getContext().startActivity(intent);
 
-                Intent intent = new Intent(BROADCAST_ACTION);
+                Intent intent = new Intent();
+                intent.setAction(BROADCAST_ACTION);
                 intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 v.getContext().sendBroadcast(intent);
+                Log.d(TAG,"Message spent: "+ song.getId());
             }
         });
 

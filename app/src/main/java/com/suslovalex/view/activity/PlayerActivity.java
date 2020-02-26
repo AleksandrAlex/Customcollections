@@ -15,10 +15,10 @@ import com.suslovalex.view.fragment.PlayerFragment;
 
 public class PlayerActivity extends AppCompatActivity {
 
+    public final static int DEFAULT_SONG_ID = -1;
     public final static String INTENT_KEY_SONG_PATH = "intent_key_song_path";
     private int mSongId;
-   // public static final String BROADCAST_ACTION = "com.suslovalex.myBroadcastReceiver";
-    private BroadcastReceiver broadcastReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +29,11 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initSongId() {
-         Intent intentFromSelectActivity = getIntent();
-      // if (intentFromSelectActivity == null){
-      //     mSongId=1;
-      // }
-
-        mSongId = intentFromSelectActivity.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, -1);
-        if (mSongId == -1){
-            //finish();
-            return;
+        Intent intentFromSelectActivity = getIntent();
+        if (intentFromSelectActivity == null) {
+            mSongId = DEFAULT_SONG_ID;
+        } else {
+            mSongId = intentFromSelectActivity.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, DEFAULT_SONG_ID);
         }
     }
 

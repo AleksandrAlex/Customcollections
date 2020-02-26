@@ -103,6 +103,7 @@ public class SelectActivity extends AppCompatActivity {
 
         return getContentResolver().query(URI, protection, selection, selectionArgs, null);
     }
+
     private void initialization() {
         initializeViews();
         initializeParametres();
@@ -125,7 +126,7 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void setGenreSpinnerAdapter() {
-        Cursor cursor = prepareGenreCursor(); // уже с уникальными записями
+        Cursor cursor = prepareGenreCursor();
         String[] array = mSongMapper.mappCursorToGenre(cursor);
         ArrayAdapter<?> genreAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -152,13 +153,14 @@ public class SelectActivity extends AppCompatActivity {
 
     private void addDataToDB() {
         final Cursor cursor = getContentResolver().query(URI, null, null, null, null);
-        if (cursor == null)
-        if (cursor.getCount() > 0) {
-            Log.d(TAG, "Amount of return;notes is " + cursor.getCount());
-        } else {
-            initData();
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                Log.d(TAG, "Amount of return;notes is " + cursor.getCount());
+            } else {
+                initData();
+            }
+            cursor.close();
         }
-        cursor.close();
     }
 
     private void initializeViews() {
