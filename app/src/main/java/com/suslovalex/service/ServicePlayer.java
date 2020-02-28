@@ -73,9 +73,9 @@ public class ServicePlayer extends Service {
     }
 
     public void stopMusic(){
-        if (mPlayer !=null) {
+        if (mPlayer != null) {
             mPlayer.release();
-            mPlayer =null;
+            mPlayer = null;
         }
     }
 

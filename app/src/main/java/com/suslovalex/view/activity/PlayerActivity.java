@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.suslovalex.customcollections.R;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
@@ -19,7 +20,6 @@ public class PlayerActivity extends AppCompatActivity {
     public final static String INTENT_KEY_SONG_PATH = "intent_key_song_path";
     private int mSongId;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +29,13 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initSongId() {
-        Intent intentFromSelectActivity = getIntent();
-        if (intentFromSelectActivity == null) {
+        Intent intentFromSongReceiver = getIntent();
+        if (intentFromSongReceiver == null) {
             mSongId = DEFAULT_SONG_ID;
         } else {
-            mSongId = intentFromSelectActivity.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, DEFAULT_SONG_ID);
+            mSongId = intentFromSongReceiver.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, DEFAULT_SONG_ID);
         }
+        Log.d("From Receiver to player", String.valueOf(mSongId));
     }
 
     private void createFragment() {

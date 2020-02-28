@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
-import com.suslovalex.view.activity.PlayerActivity;
 
 
 import java.util.List;
@@ -45,9 +44,9 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
             @Override
             public void onClick(View v) {
 
-               //Intent intent = new Intent(v.getContext(), PlayerActivity.class);
-               //intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
-               //v.getContext().startActivity(intent);
+                //Intent intent = new Intent(v.getContext(), PlayerActivity.class);
+                //intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
+                //v.getContext().startActivity(intent);
 
                 Intent intent = new Intent();
                 intent.setAction(BROADCAST_ACTION);

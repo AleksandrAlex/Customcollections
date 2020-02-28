@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,19 +48,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private int mSongId;
     private int mSongPath;
 
-
     private ServiceConnection mServiceConnection = new ServiceConnection() {
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
             mServicePlayer = playerBinder.getPlayer();
-            mServicePlayer.loadMusic();
+            //mServicePlayer.loadMusic();
             mBound = true;
+            Log.d("FRAGMENT", "onServiceConnected "+ mBound);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mBound = false;
+            Log.d("FRAGMENT", "onServiceDisconnected "+ mBound);
         }
     };
 
@@ -71,7 +74,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mSongPath = getSongPathFromDB();
         putIntentToService();
         bindService();
+
+        Log.d("FRAGMENT", mSongPath+" onCreateView");
         return v;
+
+
     }
 
     private void putIntentToService() {
@@ -93,7 +100,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                             SongDatabaseHelper.FIELD_ID + "=?",
                             new String[]{String.valueOf(mSongId)},
                             null);
-            SongMapper mapper = new SongMapper();// class
+            SongMapper mapper = new SongMapper();
             if (cursor != null) {
                 List<Song> listSong = mapper.mappCursorToSongsList(cursor);
                 for (Song song : listSong) {
@@ -187,5 +194,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public void setSongId(int songId) {
         mSongId = songId;
+        Log.d("Number_of_song ", String.valueOf(mSongId));
     }
 }
