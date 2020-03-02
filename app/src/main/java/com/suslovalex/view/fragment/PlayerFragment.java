@@ -25,6 +25,7 @@ import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
 import com.suslovalex.service.ServicePlayer;
+import com.suslovalex.view.activity.PlayerActivity;
 import com.suslovalex.view.activity.SelectActivity;
 
 import java.util.List;
@@ -56,13 +57,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             mServicePlayer = playerBinder.getPlayer();
             //mServicePlayer.loadMusic();
             mBound = true;
-            Log.d("FRAGMENT", "onServiceConnected "+ mBound);
+
+            mServicePlayer.setSong(mSongPath);
+
+            Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceConnected(). " +
+                    "mSongID = "+ mSongId+" mSongPath = "+mSongPath);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mBound = false;
-            Log.d("FRAGMENT", "onServiceDisconnected "+ mBound);
+            //Log.d(PlayerActivity.MyLogs, "onServiceDisconnected "+ mBound);
+            Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
         }
     };
 
@@ -75,10 +81,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         putIntentToService();
         bindService();
 
-        Log.d("FRAGMENT", mSongPath+" onCreateView");
+        //Log.d(PlayerActivity.MyLogs, "Player Fragment. Song path: "+ mSongPath);
+        Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()"+"mSongID = "+ mSongId+" mSongPath = "+mSongPath);
         return v;
+    }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(PlayerActivity.MyLogs,"PlayerActivity onStop()");
     }
 
     private void putIntentToService() {
@@ -174,10 +185,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
             case R.id.selectBtn:
                 mIntentToSelectActivity = new Intent(getContext(), SelectActivity.class);
-                mServicePlayer.stopMusic();
+                if (mServicePlayer.isPlaying()) {
+                    mServicePlayer.stopMusic();
+                }
                 startActivity(mIntentToSelectActivity);
-
-                break;
         }
     }
 
@@ -190,10 +201,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 getContext().unbindService(mServiceConnection);
             mBound = false;
         }
+        Log.d(PlayerActivity.MyLogs, "PlayerActivity onDestroyView()");
     }
 
     public void setSongId(int songId) {
         mSongId = songId;
+
         Log.d("Number_of_song ", String.valueOf(mSongId));
     }
 }

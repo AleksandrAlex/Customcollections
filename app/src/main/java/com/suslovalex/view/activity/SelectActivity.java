@@ -51,6 +51,7 @@ public class SelectActivity extends AppCompatActivity {
         setContentView(R.layout.select_song_activity);
         addDataToDB();
         initialization();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onCreate()");
     }
 
     private void setViewElementsListeners() {

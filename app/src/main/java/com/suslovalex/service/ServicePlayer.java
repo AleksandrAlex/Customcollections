@@ -6,10 +6,13 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.suslovalex.customcollections.R;
+import com.suslovalex.view.activity.PlayerActivity;
+
 
 import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
@@ -22,9 +25,10 @@ public class ServicePlayer extends Service {
     private final IBinder mBinder = new PlayerBinder();
     private int mPathToSong;
 
-    public class PlayerBinder extends Binder{
 
-       public ServicePlayer getPlayer(){
+    public class PlayerBinder extends Binder {
+
+        public ServicePlayer getPlayer() {
             return ServicePlayer.this;
         }
     }
@@ -33,53 +37,60 @@ public class ServicePlayer extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         getPathToSong(intent);
-        mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
+//        mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
+
+        Log.d(PlayerActivity.MyLogs, "ServicePlayer onBind()" + " mPathToSong = " + mPathToSong);
         return mBinder;
     }
 
+    //!!!!!!!!!!!!!!!!!!!!
     private void getPathToSong(Intent intent) {
-            mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH ,-1);
-            if (mPathToSong==-1){
+        mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH, -1);
+        if (mPathToSong == -1) {
             mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
         }
+        //Log.d(PlayerActivity.MyLogs, "ServicePlayer getPathToSong: "+mPathToSong);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(PlayerActivity.MyLogs, "ServicePlayer onCreate()" + " mPathToSong = " + mPathToSong);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(PlayerActivity.MyLogs, "ServicePlayer onStartCommand()");
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(PlayerActivity.MyLogs, "ServicePlayer onDestroy()");
     }
 
     public void playMusic() {
-        if (mPlayer == null){
-            mPlayer = MediaPlayer.create(this,R.raw.kassabian__fire);
+        if (mPlayer == null) {
+            mPlayer = MediaPlayer.create(this, mPathToSong);
         }
         mPlayer.start();
     }
 
-    public void pauseMusic(){
-        if (mPlayer !=null) {
+    public void pauseMusic() {
+        if (mPlayer != null) {
             mPlayer.pause();
         }
     }
 
-    public void stopMusic(){
+    public void stopMusic() {
         if (mPlayer != null) {
             mPlayer.release();
             mPlayer = null;
         }
     }
 
-    public void saveMusic(){
+    public void saveMusic() {
         CURRENT_SONG_POSITION = mPlayer.getCurrentPosition();
         mSharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
@@ -87,9 +98,28 @@ public class ServicePlayer extends Service {
         editor.apply();
     }
 
-    public void loadMusic(){
+    public void loadMusic() {
         mSharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
-        int loadCurrentSongPosition = mSharedPreferences.getInt(POSITION,0);
+        int loadCurrentSongPosition = mSharedPreferences.getInt(POSITION, 0);
         mPlayer.seekTo(loadCurrentSongPosition);
+    }
+
+    public void setSong(int path) {
+        mPathToSong = path;
+        if (mPlayer != null) {
+            mPlayer.stop();
+        }
+        if (mPathToSong == -1) {
+            mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
+        }
+        mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
+    }
+
+    public boolean isPlaying() {
+        if (mPlayer.isPlaying()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
