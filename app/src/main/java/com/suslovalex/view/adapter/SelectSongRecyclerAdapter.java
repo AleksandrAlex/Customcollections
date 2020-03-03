@@ -88,6 +88,7 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
         public SelectSongViewHolder(@NonNull View itemView) {
             super(itemView);
             artist = itemView.findViewById(R.id.item_song);
+            Log.d(PlayerActivity.MyLogs, "SelectSongViewHolder");
         }
     }
 

@@ -60,14 +60,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
             mServicePlayer.setSong(mSongPath);
 
-            Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceConnected(). " +
-                    "mSongID = "+ mSongId+" mSongPath = "+mSongPath);
+            Log.d(PlayerActivity.MyLogs, "PlayerFragment. Service Connection onServiceConnected()");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mBound = false;
-            //Log.d(PlayerActivity.MyLogs, "onServiceDisconnected "+ mBound);
+            mServicePlayer.stopMusic();
+            mServicePlayer.onDestroy();
+
             Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
         }
     };
@@ -82,9 +83,72 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         putIntentToService();
         bindService();
 
-        //Log.d(PlayerActivity.MyLogs, "Player Fragment. Song path: "+ mSongPath);
-        Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()"+"mSongID = "+ mSongId+" mSongPath = "+mSongPath);
+        Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()");
         return v;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onAttach()");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onCreate()");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onActivityCreated()");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onStart()");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onResume()");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onPause()");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(PlayerActivity.MyLogs,"PlayerFragment onStop()");
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mServicePlayer.saveMusic();
+        if (mBound) {
+            if (getContext() != null)
+                getContext().unbindService(mServiceConnection);
+            mBound = false;
+        }
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onDestroyView()");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onDestroy()");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(PlayerActivity.MyLogs, "PlayerFragment onDetach()");
     }
 
     private void setTitleToTextViews() {
@@ -109,12 +173,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 cursor.close();
             }
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(PlayerActivity.MyLogs,"PlayerActivity onStop()");
     }
 
     private void putIntentToService() {
@@ -217,21 +275,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mServicePlayer.saveMusic();
-        if (mBound) {
-            if (getContext() != null)
-                getContext().unbindService(mServiceConnection);
-            mBound = false;
-        }
-        Log.d(PlayerActivity.MyLogs, "PlayerActivity onDestroyView()");
-    }
-
     public void setSongId(int songId) {
         mSongId = songId;
-
-        Log.d("Number_of_song ", String.valueOf(mSongId));
     }
 }

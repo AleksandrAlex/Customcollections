@@ -24,7 +24,43 @@ public class PlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player);
         initSongId();
         createFragment();
-        Log.d(MyLogs, "PlayerActivity onCreate. mSongID = "+mSongId);
+        Log.d(MyLogs, "PlayerActivity onCreate()");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(MyLogs, "PlayerActivity onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(MyLogs, "PlayerActivity onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(MyLogs, "PlayerActivity onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(MyLogs, "PlayerActivity onStop()");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(MyLogs, "PlayerActivity onRestart()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(MyLogs, "PlayerActivity onDestroy()");
     }
 
     private void initSongId() {
@@ -34,7 +70,6 @@ public class PlayerActivity extends AppCompatActivity {
         } else {
             mSongId = intentFromSongReceiver.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, DEFAULT_SONG_ID);
         }
-        //Log.d(MyLogs, "PlayerActivity Song ID: "+mSongId);
     }
 
     private void createFragment() {

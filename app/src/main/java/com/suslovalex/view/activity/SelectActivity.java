@@ -54,6 +54,42 @@ public class SelectActivity extends AppCompatActivity {
         Log.d(PlayerActivity.MyLogs, "SelectActivity onCreate()");
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onStop()");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onRestart()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(PlayerActivity.MyLogs, "SelectActivity onDestroy()");
+    }
+
     private void setViewElementsListeners() {
         mShowButton.setOnClickListener(new View.OnClickListener() {
             @Override

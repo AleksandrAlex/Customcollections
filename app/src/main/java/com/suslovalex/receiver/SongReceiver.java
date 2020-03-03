@@ -13,19 +13,17 @@ import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 
 public class SongReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "Receiver";
     private int id;
     private Intent intentToPlayerActivity;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         id = intent.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, PlayerActivity.DEFAULT_SONG_ID);
-        //Log.d(PlayerActivity.MyLogs, "Receiver. Song id: "+id);
 
         intentToPlayerActivity = new Intent(context, PlayerActivity.class);
         intentToPlayerActivity.putExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, id);
         context.startActivity(intentToPlayerActivity);
 
-        Log.d(PlayerActivity.MyLogs, "SongReceiver onReceive(). ID = "+id);
+        Log.d(PlayerActivity.MyLogs, "SongReceiver onReceive()");
     }
 }

@@ -34,23 +34,23 @@ public class ServicePlayer extends Service {
        // getPathToSong(intent);
 //        mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
 
-        Log.d(PlayerActivity.MyLogs, "ServicePlayer onBind()" + " mPathToSong = " + mPathToSong);
+        Log.d(PlayerActivity.MyLogs, "ServicePlayer onBind()");
         return mBinder;
     }
 
     //!!!!!!!!!!!!!!!!!!!!
-// private void getPathToSong(Intent intent) {
-//     mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH, -1);
-//     if (mPathToSong == -1) {
-//         mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
-//     }
-//     //Log.d(PlayerActivity.MyLogs, "ServicePlayer getPathToSong: "+mPathToSong);
-// }
+  // private void getPathToSong(Intent intent) {
+  //  mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH, -1);
+  //  if (mPathToSong == -1) {
+  //      mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
+  //  }
+  //  //Log.d(PlayerActivity.MyLogs, "ServicePlayer getPathToSong: "+mPathToSong);
+ //}
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(PlayerActivity.MyLogs, "ServicePlayer onCreate()" + " mPathToSong = " + mPathToSong);
+        Log.d(PlayerActivity.MyLogs, "ServicePlayer onCreate()");
     }
 
     @Override
