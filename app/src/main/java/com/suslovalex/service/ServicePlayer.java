@@ -7,14 +7,9 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
-
 import com.suslovalex.customcollections.R;
 import com.suslovalex.view.activity.PlayerActivity;
-
-
-import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
 public class ServicePlayer extends Service {
 
@@ -36,7 +31,7 @@ public class ServicePlayer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        getPathToSong(intent);
+       // getPathToSong(intent);
 //        mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
 
         Log.d(PlayerActivity.MyLogs, "ServicePlayer onBind()" + " mPathToSong = " + mPathToSong);
@@ -44,13 +39,13 @@ public class ServicePlayer extends Service {
     }
 
     //!!!!!!!!!!!!!!!!!!!!
-    private void getPathToSong(Intent intent) {
-        mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH, -1);
-        if (mPathToSong == -1) {
-            mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
-        }
-        //Log.d(PlayerActivity.MyLogs, "ServicePlayer getPathToSong: "+mPathToSong);
-    }
+// private void getPathToSong(Intent intent) {
+//     mPathToSong = intent.getIntExtra(INTENT_KEY_SONG_PATH, -1);
+//     if (mPathToSong == -1) {
+//         mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
+//     }
+//     //Log.d(PlayerActivity.MyLogs, "ServicePlayer getPathToSong: "+mPathToSong);
+// }
 
     @Override
     public void onCreate() {
@@ -110,7 +105,7 @@ public class ServicePlayer extends Service {
             mPlayer.stop();
         }
         if (mPathToSong == -1) {
-            mPathToSong = R.raw.ozzy_osbourne__i_just_want_you;
+            mPathToSong = R.raw.kassabian__fire;
         }
         mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
     }

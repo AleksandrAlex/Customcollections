@@ -78,12 +78,37 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         View v = inflater.inflate(R.layout.fragment, container, false);
         bindViews(v);
         mSongPath = getSongPathFromDB();
+        setTitleToTextViews();
         putIntentToService();
         bindService();
 
         //Log.d(PlayerActivity.MyLogs, "Player Fragment. Song path: "+ mSongPath);
         Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()"+"mSongID = "+ mSongId+" mSongPath = "+mSongPath);
         return v;
+    }
+
+    private void setTitleToTextViews() {
+        if (getContext() != null) {
+            Cursor cursor = getContext().getContentResolver()
+                    .query(SONG_CONTENT_URI,
+                            null,
+                            SongDatabaseHelper.FIELD_ID + "=?",
+                            new String[]{String.valueOf(mSongId)},
+                            null);
+            SongMapper mapper = new SongMapper();
+            if (cursor != null) {
+                List<Song> listSong = mapper.mappCursorToSongsList(cursor);
+                for (Song song : listSong) {
+                    int id = song.getId();
+                    if (id == mSongId) {
+                        mSong.setText(song.getTitle());
+                        mArtist.setText(song.getArtist());
+                        mGenre.setText(song.getGenre());
+                    }
+                }
+                cursor.close();
+            }
+        }
     }
 
     @Override
@@ -185,9 +210,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
             case R.id.selectBtn:
                 mIntentToSelectActivity = new Intent(getContext(), SelectActivity.class);
-                if (mServicePlayer.isPlaying()) {
-                    mServicePlayer.stopMusic();
-                }
+               if (mServicePlayer.isPlaying()) {
+                   mServicePlayer.stopMusic();
+               }
                 startActivity(mIntentToSelectActivity);
         }
     }
