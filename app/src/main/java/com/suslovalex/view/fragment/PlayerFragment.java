@@ -81,7 +81,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mSongPath = getSongPathFromDB();
         setTitleToTextViews();
         putIntentToService();
-        bindService();
+        //bindService();
 
         Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()");
         return v;
@@ -108,6 +108,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        bindService();
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onStart()");
     }
 
@@ -125,6 +126,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
+        //mServicePlayer.saveMusic();
+        if (mBound) {
+            if (getContext() != null)
+                getContext().unbindService(mServiceConnection);
+            mBound = false;
+        }
+
         Log.d(PlayerActivity.MyLogs,"PlayerFragment onStop()");
     }
     @Override
