@@ -35,9 +35,9 @@ import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
 public class PlayerFragment extends Fragment implements View.OnClickListener {
 
-    private TextView mSong;
-    private TextView mArtist;
-    private TextView mGenre;
+    private TextView mSongTitleTextView;
+    private TextView mSongArtistTextView;
+    private TextView mSongGenreTextView;
     private Button mPlay;
     private Button mPause;
     private Button mStop;
@@ -47,7 +47,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private ServicePlayer mServicePlayer;
     private boolean mBound = false;
     private int mSongId;
-    private int mSongPath;
+    private Song mSong;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -65,7 +65,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         public void onServiceDisconnected(ComponentName name) {
             mBound = false;
             mServicePlayer.stopMusic();
-            mServicePlayer.onDestroy();
+            mServicePlayer = null;
 
             Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
         }
@@ -76,8 +76,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment, container, false);
         bindViews(v);
-        mSongPath = getSongPathFromDB();
-        setTitleToTextViews();
+        mSong = getSongFromDB();
+        setTextViewNames();
         putIntentToService();
 
         Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()");
@@ -155,33 +155,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onDetach()");
     }
 
-    private void setTitleToTextViews() {
-        if (getContext() != null) {
-            Cursor cursor = getContext().getContentResolver()
-                    .query(SONG_CONTENT_URI,
-                            null,
-                            SongDatabaseHelper.FIELD_ID + "=?",
-                            new String[]{String.valueOf(mSongId)},
-                            null);
-            SongMapper mapper = new SongMapper();
-            if (cursor != null) {
-                List<Song> listSong = mapper.mappCursorToSongsList(cursor);
-                for (Song song : listSong) {
-                    int id = song.getId();
-                    if (id == mSongId) {
-                        mSong.setText(song.getTitle());
-                        mArtist.setText(song.getArtist());
-                        mGenre.setText(song.getGenre());
-                    }
-                }
-                cursor.close();
-            }
-        }
+    private void setTextViewNames() {
+        mSongArtistTextView.setText(mSong.getTitle());
+        mSongTitleTextView.setText(mSong.getTitle());
+        mSongGenreTextView.setText(mSong.getGenre());
     }
 
     private void putIntentToService() {
         mIntent = new Intent(getContext(), ServicePlayer.class);
-        mIntent.putExtra(INTENT_KEY_SONG_PATH, mSongPath);
+        mIntent.putExtra(INTENT_KEY_SONG_PATH, mSong.getPath());
     }
 
     private void bindService() {
@@ -189,8 +171,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private int getSongPathFromDB() {
-        int songPath = -1;
+    private Song getSongFromDB() {
+        Song song = new Song(-1,null,null,null,-1);
         if (getContext() != null) {
             Cursor cursor = getContext().getContentResolver()
                     .query(SONG_CONTENT_URI,
@@ -201,16 +183,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             SongMapper mapper = new SongMapper();
             if (cursor != null) {
                 List<Song> listSong = mapper.mappCursorToSongsList(cursor);
-                for (Song song : listSong) {
-                    int id = song.getId();
+                for (Song s : listSong) {
+                    int id = s.getId();
                     if (id == mSongId) {
-                        songPath = song.getPath();
+                        song = s;
                     }
                 }
                 cursor.close();
             }
         }
-        return songPath;
+        return song;
     }
 
     private void bindViews(View view) {
@@ -227,9 +209,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initializeViewByID(View view) {
-        mSong = view.findViewById(R.id.song);
-        mArtist = view.findViewById(R.id.artist);
-        mGenre = view.findViewById(R.id.genre);
+        mSongTitleTextView = view.findViewById(R.id.song);
+        mSongArtistTextView = view.findViewById(R.id.artist);
+        mSongGenreTextView = view.findViewById(R.id.genre);
         mPlay = view.findViewById(R.id.playBtn);
         mPause = view.findViewById(R.id.pauseBtn);
         mStop = view.findViewById(R.id.stopBtn);
