@@ -3,11 +3,18 @@ package com.suslovalex.model;
 import androidx.annotation.NonNull;
 
 public class Song {
+    private static final int DEFAULT_SONG_ID = -1;
+    private static final int DEFAULT_SONG_PATH = -1;
+    private static final String DEFAULT_VALUE = "default";
     private int mId;
     private String mArtist;
     private String mGenre;
     private String mTitle;
     private int mPath;
+
+    public Song() {
+        this(DEFAULT_SONG_ID,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_VALUE,DEFAULT_SONG_PATH);
+    }
 
     public Song(int id, String artist, String genre, String title, int path) {
         mId = id;
@@ -16,14 +23,6 @@ public class Song {
         mTitle = title;
         mPath = path;
     }
-
-//  public Song(String artist, String genre, String title, int path) {
-//      mId++;
-//      mArtist = artist;
-//      mGenre = genre;
-//      mTitle = title;
-//      mPath = path;
-//  }
 
     public int getId() {
         return mId;

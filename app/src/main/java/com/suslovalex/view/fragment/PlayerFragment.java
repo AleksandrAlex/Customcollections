@@ -38,12 +38,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private TextView mSongTitleTextView;
     private TextView mSongArtistTextView;
     private TextView mSongGenreTextView;
-    private Button mPlay;
-    private Button mPause;
-    private Button mStop;
-    private Button mSelect;
+    private Button mBtnPlay;
+    private Button mBtnPause;
+    private Button mBtnStop;
+    private Button mBtnSelect;
     private Intent mIntent;
-    private Intent mIntentToSelectActivity;
     private ServicePlayer mServicePlayer;
     private boolean mBound = false;
     private int mSongId;
@@ -75,10 +74,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment, container, false);
-        bindViews(v);
+        initViewElements(v);
         mSong = getSongFromDB();
-        setTextViewNames();
-        putIntentToService();
+        setTextViewValues();
+        prepareIntentToService();
 
         Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()");
         return v;
@@ -105,7 +104,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        bindService();
+        bindPlayService();
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onStart()");
     }
 
@@ -155,24 +154,26 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onDetach()");
     }
 
-    private void setTextViewNames() {
-        mSongArtistTextView.setText(mSong.getTitle());
-        mSongTitleTextView.setText(mSong.getTitle());
-        mSongGenreTextView.setText(mSong.getGenre());
+    private void setTextViewValues() {
+        if (mSong != null) {
+            mSongArtistTextView.setText(mSong.getTitle());
+            mSongTitleTextView.setText(mSong.getTitle());
+            mSongGenreTextView.setText(mSong.getGenre());
+        }
     }
 
-    private void putIntentToService() {
+    private void prepareIntentToService() {
         mIntent = new Intent(getContext(), ServicePlayer.class);
         mIntent.putExtra(INTENT_KEY_SONG_PATH, mSong.getPath());
     }
 
-    private void bindService() {
+    private void bindPlayService() {
         if (getContext() != null)
             getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private Song getSongFromDB() {
-        Song song = new Song(-1,null,null,null,-1);
+        Song song = new Song();
         if (getContext() != null) {
             Cursor cursor = getContext().getContentResolver()
                     .query(SONG_CONTENT_URI,
@@ -183,10 +184,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             SongMapper mapper = new SongMapper();
             if (cursor != null) {
                 List<Song> listSong = mapper.mappCursorToSongsList(cursor);
-                for (Song s : listSong) {
-                    int id = s.getId();
+                for (Song tempSong : listSong) {
+                    int id = tempSong.getId();
                     if (id == mSongId) {
-                        song = s;
+                        song = tempSong;
                     }
                 }
                 cursor.close();
@@ -195,27 +196,27 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         return song;
     }
 
-    private void bindViews(View view) {
+    private void initViewElements(View view) {
         initializeViewByID(view);
         setButtonListeners();
 
     }
 
     private void setButtonListeners() {
-        mPlay.setOnClickListener(this);
-        mStop.setOnClickListener(this);
-        mPause.setOnClickListener(this);
-        mSelect.setOnClickListener(this);
+        mBtnPlay.setOnClickListener(this);
+        mBtnStop.setOnClickListener(this);
+        mBtnPause.setOnClickListener(this);
+        mBtnSelect.setOnClickListener(this);
     }
 
     private void initializeViewByID(View view) {
         mSongTitleTextView = view.findViewById(R.id.song);
         mSongArtistTextView = view.findViewById(R.id.artist);
         mSongGenreTextView = view.findViewById(R.id.genre);
-        mPlay = view.findViewById(R.id.playBtn);
-        mPause = view.findViewById(R.id.pauseBtn);
-        mStop = view.findViewById(R.id.stopBtn);
-        mSelect = view.findViewById(R.id.selectBtn);
+        mBtnPlay = view.findViewById(R.id.playBtn);
+        mBtnPause = view.findViewById(R.id.pauseBtn);
+        mBtnStop = view.findViewById(R.id.stopBtn);
+        mBtnSelect = view.findViewById(R.id.selectBtn);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -253,6 +254,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.selectBtn:
+                Intent mIntentToSelectActivity;
                 mIntentToSelectActivity = new Intent(getContext(), SelectActivity.class);
                if (mServicePlayer.isPlaying()) {
                    mServicePlayer.stopMusic();
