@@ -75,7 +75,7 @@ public class PlayerActivity extends AppCompatActivity {
     private void createFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        PlayerFragment fragment = new PlayerFragment();
+        PlayerFragment fragment = PlayerFragment.getPlayerFragment();
         fragment.setSongId(mSongId);
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();

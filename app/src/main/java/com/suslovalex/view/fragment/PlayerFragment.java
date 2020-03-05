@@ -32,8 +32,9 @@ import java.util.List;
 import static com.suslovalex.provider.ProviderDB.SONG_CONTENT_URI;
 import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
-public class PlayerFragment extends Fragment implements View.OnClickListener, PlayerContract.View {
+public final class PlayerFragment extends Fragment implements View.OnClickListener, PlayerContract.View {
 
+    private static PlayerFragment instancePlayer;
     private TextView mSongTitleTextView;
     private TextView mSongArtistTextView;
     private TextView mSongGenreTextView;
@@ -44,37 +45,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     private PlayerPresenter mPlayerPresenter;
     private int mSongId;
 
-    public PlayerFragment() {
+
+    private PlayerFragment() {
         initParameters();
     }
 
-    // private Intent mIntent;
-   // private ServicePlayer mServicePlayer;
-   // private boolean mBound = false;
-   // private int mSongId;
-   // private Song mSong;
-
-    // private ServiceConnection mServiceConnection = new ServiceConnection() {
-
-  //     @Override
-  //     public void onServiceConnected(ComponentName name, IBinder service) {
-  //         ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
-  //         mServicePlayer = playerBinder.getPlayer();
-  //         mServicePlayer.loadMusic();
-  //         mBound = true;
-
-  //         Log.d(PlayerActivity.MyLogs, "PlayerFragment. Service Connection onServiceConnected()");
-  //     }
-
-  //     @Override
-  //     public void onServiceDisconnected(ComponentName name) {
-  //         mBound = false;
-  //         mServicePlayer.stopMusic();
-  //         mServicePlayer = null;
-
-  //         Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
-  //     }
-  // };
+    public static PlayerFragment getPlayerFragment(){
+        if (instancePlayer == null){
+            instancePlayer = new PlayerFragment();
+        }
+        return instancePlayer;
+    }
 
     @Nullable
     @Override
