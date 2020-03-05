@@ -1,13 +1,10 @@
 package com.suslovalex.view.fragment;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +24,15 @@ import com.suslovalex.model.SongDatabaseHelper;
 import com.suslovalex.service.ServicePlayer;
 import com.suslovalex.view.activity.PlayerActivity;
 import com.suslovalex.view.activity.SelectActivity;
+import com.suslovalex.view.contracts.PlayerContract;
+import com.suslovalex.view.presenter.PlayerPresenter;
 
 import java.util.List;
 
 import static com.suslovalex.provider.ProviderDB.SONG_CONTENT_URI;
 import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
 
-public class PlayerFragment extends Fragment implements View.OnClickListener {
+public class PlayerFragment extends Fragment implements View.OnClickListener, PlayerContract.View {
 
     private TextView mSongTitleTextView;
     private TextView mSongArtistTextView;
@@ -42,42 +41,51 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Button mBtnPause;
     private Button mBtnStop;
     private Button mBtnSelect;
-    private Intent mIntent;
-    private ServicePlayer mServicePlayer;
-    private boolean mBound = false;
+    private PlayerPresenter mPlayerPresenter;
     private int mSongId;
-    private Song mSong;
 
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
+    public PlayerFragment() {
+        initParameters();
+    }
 
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
-            mServicePlayer = playerBinder.getPlayer();
-            mServicePlayer.loadMusic();
-            mBound = true;
+    // private Intent mIntent;
+   // private ServicePlayer mServicePlayer;
+   // private boolean mBound = false;
+   // private int mSongId;
+   // private Song mSong;
 
-            Log.d(PlayerActivity.MyLogs, "PlayerFragment. Service Connection onServiceConnected()");
-        }
+    // private ServiceConnection mServiceConnection = new ServiceConnection() {
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mBound = false;
-            mServicePlayer.stopMusic();
-            mServicePlayer = null;
+  //     @Override
+  //     public void onServiceConnected(ComponentName name, IBinder service) {
+  //         ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
+  //         mServicePlayer = playerBinder.getPlayer();
+  //         mServicePlayer.loadMusic();
+  //         mBound = true;
 
-            Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
-        }
-    };
+  //         Log.d(PlayerActivity.MyLogs, "PlayerFragment. Service Connection onServiceConnected()");
+  //     }
+
+  //     @Override
+  //     public void onServiceDisconnected(ComponentName name) {
+  //         mBound = false;
+  //         mServicePlayer.stopMusic();
+  //         mServicePlayer = null;
+
+  //         Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
+  //     }
+  // };
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment, container, false);
         initViewElements(v);
-        mSong = getSongFromDB();
+        //initParameters();
+        mPlayerPresenter.prepareSong();
         setTextViewValues();
-        prepareIntentToService();
+        mPlayerPresenter.prepareIntentToService();
+
 
         Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()");
         return v;
@@ -104,7 +112,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        bindPlayService();
+        mPlayerPresenter.bindPlayService();
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onStart()");
     }
 
@@ -119,26 +127,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         super.onPause();
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onPause()");
     }
+
     @Override
     public void onStop() {
         super.onStop();
-        if (mBound) {
-            if (getContext() != null)
-                getContext().unbindService(mServiceConnection);
-            mBound = false;
-        }
-
+        mPlayerPresenter.unbindPlayerService();
         Log.d(PlayerActivity.MyLogs,"PlayerFragment onStop()");
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mServicePlayer.saveMusic();
-        if (mBound) {
-            if (getContext() != null)
-                getContext().unbindService(mServiceConnection);
-            mBound = false;
-        }
+        mPlayerPresenter.saveMusic();
+        mPlayerPresenter.unbindPlayerService();
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onDestroyView()");
     }
 
@@ -154,52 +155,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onDetach()");
     }
 
+    @Override
+    public Context getViewContext() {
+        return getContext();
+    }
+
     private void setTextViewValues() {
-        if (mSong != null) {
-            mSongArtistTextView.setText(mSong.getTitle());
-            mSongTitleTextView.setText(mSong.getTitle());
-            mSongGenreTextView.setText(mSong.getGenre());
+        Song song = mPlayerPresenter.getSong();
+        if (song != null) {
+            mSongArtistTextView.setText(song.getArtist());
+            mSongTitleTextView.setText(song.getTitle());
+            mSongGenreTextView.setText(song.getGenre());
         }
-    }
-
-    private void prepareIntentToService() {
-        mIntent = new Intent(getContext(), ServicePlayer.class);
-        mIntent.putExtra(INTENT_KEY_SONG_PATH, mSong.getPath());
-    }
-
-    private void bindPlayService() {
-        if (getContext() != null)
-            getContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private Song getSongFromDB() {
-        Song song = new Song();
-        if (getContext() != null) {
-            Cursor cursor = getContext().getContentResolver()
-                    .query(SONG_CONTENT_URI,
-                            null,
-                            SongDatabaseHelper.FIELD_ID + "=?",
-                            new String[]{String.valueOf(mSongId)},
-                            null);
-            SongMapper mapper = new SongMapper();
-            if (cursor != null) {
-                List<Song> listSong = mapper.mappCursorToSongsList(cursor);
-                for (Song tempSong : listSong) {
-                    int id = tempSong.getId();
-                    if (id == mSongId) {
-                        song = tempSong;
-                    }
-                }
-                cursor.close();
-            }
-        }
-        return song;
     }
 
     private void initViewElements(View view) {
         initializeViewByID(view);
         setButtonListeners();
-
     }
 
     private void setButtonListeners() {
@@ -227,7 +199,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 Thread thread1 = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mServicePlayer.playMusic();
+                        mPlayerPresenter.playMusic();
                     }
                 });
                 thread1.start();
@@ -237,7 +209,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 Thread thread2 = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mServicePlayer.pauseMusic();
+                        mPlayerPresenter.pauseMusic();
                     }
                 });
                 thread2.start();
@@ -247,23 +219,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 Thread thread3 = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mServicePlayer.stopMusic();
+                        mPlayerPresenter.stopMusic();
                     }
                 });
                 thread3.start();
                 break;
 
             case R.id.selectBtn:
-                Intent mIntentToSelectActivity;
-                mIntentToSelectActivity = new Intent(getContext(), SelectActivity.class);
-               if (mServicePlayer.isPlaying()) {
-                   mServicePlayer.stopMusic();
-               }
-                startActivity(mIntentToSelectActivity);
+               mPlayerPresenter.sendIntentToSelectActivity();
         }
     }
 
     public void setSongId(int songId) {
-        mSongId = songId;
+         mPlayerPresenter.setSongId(songId);
+        Log.d(PlayerActivity.MyLogs, "setSongId: ");
     }
+
+     private void initParameters() {
+         mPlayerPresenter = new PlayerPresenter(this);
+     }
 }

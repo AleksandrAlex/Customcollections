@@ -10,7 +10,6 @@ import com.suslovalex.customcollections.R;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.fragment.PlayerFragment;
 
-
 public class PlayerActivity extends AppCompatActivity {
 
     public static final String MyLogs = "MyLogs";
@@ -23,13 +22,14 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         initSongId();
-        createFragment();
+
         Log.d(MyLogs, "PlayerActivity onCreate()");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        createFragment();
         Log.d(MyLogs, "PlayerActivity onStart()");
     }
 
@@ -80,4 +80,5 @@ public class PlayerActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
     }
+
 }
