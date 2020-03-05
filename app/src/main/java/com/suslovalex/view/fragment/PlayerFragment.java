@@ -1,8 +1,6 @@
 package com.suslovalex.view.fragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,24 +15,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
-import com.suslovalex.model.SongDatabaseHelper;
-import com.suslovalex.service.ServicePlayer;
 import com.suslovalex.view.activity.PlayerActivity;
-import com.suslovalex.view.activity.SelectActivity;
 import com.suslovalex.view.contracts.PlayerContract;
 import com.suslovalex.view.presenter.PlayerPresenter;
 
-import java.util.List;
+public class PlayerFragment extends Fragment implements View.OnClickListener, PlayerContract.View {
 
-import static com.suslovalex.provider.ProviderDB.SONG_CONTENT_URI;
-import static com.suslovalex.view.activity.PlayerActivity.INTENT_KEY_SONG_PATH;
-
-public final class PlayerFragment extends Fragment implements View.OnClickListener, PlayerContract.View {
-
-    private static PlayerFragment instancePlayer;
+    private static PlayerFragment playerFragment;
     private TextView mSongTitleTextView;
     private TextView mSongArtistTextView;
     private TextView mSongGenreTextView;
@@ -43,18 +32,17 @@ public final class PlayerFragment extends Fragment implements View.OnClickListen
     private Button mBtnStop;
     private Button mBtnSelect;
     private PlayerPresenter mPlayerPresenter;
-    private int mSongId;
 
 
     private PlayerFragment() {
-        initParameters();
+        //initParameters();
     }
 
     public static PlayerFragment getPlayerFragment(){
-        if (instancePlayer == null){
-            instancePlayer = new PlayerFragment();
+        if (playerFragment == null){
+            playerFragment = new PlayerFragment();
         }
-        return instancePlayer;
+        return playerFragment;
     }
 
     @Nullable

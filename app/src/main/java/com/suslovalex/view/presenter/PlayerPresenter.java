@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
