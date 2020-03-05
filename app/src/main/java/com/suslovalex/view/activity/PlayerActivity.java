@@ -15,6 +15,7 @@ public class PlayerActivity extends AppCompatActivity {
     public static final String MyLogs = "MyLogs";
     public final static int DEFAULT_SONG_ID = -1;
     public final static String INTENT_KEY_SONG_PATH = "intent_key_song_path";
+    public final static String KEY_SONG_ID = "intent_key_song_id";
     private int mSongId;
 
     @Override
@@ -76,7 +77,11 @@ public class PlayerActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PlayerFragment fragment = PlayerFragment.getPlayerFragment();
-        fragment.setSongId(mSongId);
+        //passSongIdToFragment();
+        Bundle arg = new Bundle();
+        arg.putInt(KEY_SONG_ID, mSongId);
+        fragment.setArguments(arg);
+        //fragment.setSongId(mSongId);
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
     }

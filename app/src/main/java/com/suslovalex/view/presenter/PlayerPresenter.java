@@ -90,9 +90,9 @@ public class PlayerPresenter implements PlayerContract.Presenter {
 
     }
 
-   //public void setView(PlayerContract.View view) {
-   //    mView = view;
-   //}
+    public void setView(PlayerContract.View view) {
+        mView = view;
+    }
 
     private Song getSongFromDB() {
         Song song = new Song();

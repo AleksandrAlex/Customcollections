@@ -32,6 +32,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     private Button mBtnStop;
     private Button mBtnSelect;
     private PlayerPresenter mPlayerPresenter;
+    private int mSongId;
 
 
     private PlayerFragment() {
@@ -50,11 +51,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment, container, false);
         initViewElements(v);
-        //initParameters();
         mPlayerPresenter.prepareSong();
         setTextViewValues();
         mPlayerPresenter.prepareIntentToService();
-
 
         Log.d(PlayerActivity.MyLogs, "Player Fragment onCreateView()");
         return v;
@@ -69,6 +68,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initParameters();
+        passSongIdToPlayerPresenter();
         Log.d(PlayerActivity.MyLogs, "PlayerFragment onCreate()");
     }
 
@@ -200,11 +201,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     }
 
     public void setSongId(int songId) {
-         mPlayerPresenter.setSongId(songId);
+        //mPlayerPresenter.setSongId(songId);
         Log.d(PlayerActivity.MyLogs, "setSongId: ");
     }
 
-     private void initParameters() {
-         mPlayerPresenter = new PlayerPresenter(this);
-     }
+    private void initParameters() {
+        mPlayerPresenter = new PlayerPresenter(this);
+        if (getArguments() != null) {
+            mSongId = getArguments().getInt(PlayerActivity.KEY_SONG_ID);
+        }
+    }
+
+    private void passSongIdToPlayerPresenter() {
+        mPlayerPresenter.setSongId(mSongId);
+    }
 }
