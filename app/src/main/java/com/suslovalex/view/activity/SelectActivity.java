@@ -3,7 +3,6 @@ package com.suslovalex.view.activity;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,44 +49,45 @@ public class SelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_song_activity);
         addDataToDB();
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity addDataToDB()");
         initialization();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onCreate()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity initialization()");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onStart()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity onStart()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onResume()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity onResume()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onPause()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity onPause()");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onStop()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity onStop()");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onRestart()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity onRestart()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(PlayerActivity.MyLogs, "SelectActivity onDestroy()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectActivity onDestroy()");
     }
 
     private void setViewElementsListeners() {

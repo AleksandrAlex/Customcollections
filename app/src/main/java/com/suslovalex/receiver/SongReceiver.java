@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.suslovalex.view.activity.PlayerActivity;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 
@@ -21,9 +19,10 @@ public class SongReceiver extends BroadcastReceiver {
         id = intent.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, PlayerActivity.DEFAULT_SONG_ID);
 
         intentToPlayerActivity = new Intent(context, PlayerActivity.class);
+        //intentToPlayerActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intentToPlayerActivity.putExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, id);
         context.startActivity(intentToPlayerActivity);
 
-        Log.d(PlayerActivity.MyLogs, "SongReceiver onReceive()");
+        Log.d(PlayerActivity.MY_LOGS, "SongReceiver onReceive()");
     }
 }

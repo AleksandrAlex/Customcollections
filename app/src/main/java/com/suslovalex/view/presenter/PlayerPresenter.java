@@ -30,27 +30,28 @@ public class PlayerPresenter implements PlayerContract.Presenter {
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(PlayerActivity.MY_LOGS, ". Service Connection onServiceConnected()");
             ServicePlayer.PlayerBinder playerBinder = (ServicePlayer.PlayerBinder) service;
             mServicePlayer = playerBinder.getPlayer();
             mServicePlayer.loadMusic();
             mBound = true;
-            Log.d(PlayerActivity.MyLogs, "PlayerFragment. Service Connection onServiceConnected()");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.d(PlayerActivity.MY_LOGS, ". Service Connection onServiceDisconnected() ");
             mBound = false;
             mServicePlayer.stopMusic();
             mServicePlayer = null;
-            Log.d(PlayerActivity.MyLogs, "Player Fragment. Service Connection onServiceDisconnected() ");
         }
     };
 
     public PlayerPresenter() {
-
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. PlayerPresenter() ");
     }
 
     public PlayerPresenter(PlayerContract.View playerFragment) {
+        Log.d(PlayerActivity.MY_LOGS, ". PlayerPresenter(PlayerContract.View playerFragment) ");
         mView = playerFragment;
     }
 
@@ -58,22 +59,26 @@ public class PlayerPresenter implements PlayerContract.Presenter {
 
     @Override
     public void prepareSong() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. prepareSong()  ");
         mSong = getSongFromDB();
     }
 
     @Override
     public void prepareIntentToService() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. prepareIntentToService() ");
         mIntent = new Intent(mView.getViewContext(), ServicePlayer.class);
         mIntent.putExtra(INTENT_KEY_SONG_PATH, mSong.getPath());
     }
 
     @Override
     public void bindPlayService() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  bindPlayService()");
         if (mView.getViewContext() != null)
             mView.getViewContext().bindService(mIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
     @Override
     public void unbindPlayerService(){
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  unbindPlayerService()");
         if (mBound) {
             if (mView.getViewContext() != null)
                 mView.getViewContext().unbindService(mServiceConnection);
@@ -82,19 +87,23 @@ public class PlayerPresenter implements PlayerContract.Presenter {
     }
 
     public Song getSong() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  getSong()");
         return mSong;
     }
 
     public void setSongId(int songId) {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. setSongId ");
         mSongId = songId;
 
     }
 
     public void setView(PlayerContract.View view) {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. setView ");
         mView = view;
     }
 
     private Song getSongFromDB() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. getSongFromDB() ");
         Song song = new Song();
         if (mView != null) {
             Cursor cursor = mView.getViewContext().getContentResolver()
@@ -119,26 +128,31 @@ public class PlayerPresenter implements PlayerContract.Presenter {
     }
     @Override
     public void saveMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  saveMusic()");
         mServicePlayer.stopMusic();
     }
 
     @Override
     public void playMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  playMusic()");
         mServicePlayer.playMusic();
     }
 
     @Override
     public void pauseMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  pauseMusic()");
         mServicePlayer.pauseMusic();
     }
 
     @Override
     public void stopMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. stopMusic() ");
         mServicePlayer.stopMusic();
     }
 
     @Override
     public void sendIntentToSelectActivity() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter.  sendIntentToSelectActivity()");
         Intent mIntentToSelectActivity;
         mIntentToSelectActivity = new Intent(mView.getViewContext(), SelectActivity.class);
         if (mServicePlayer.isPlaying()) {

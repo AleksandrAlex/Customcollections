@@ -17,7 +17,6 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
     public static final String INTENT_KEY_SONG_ID = "intent_key_song_id";
     private List<Song> mSongs;
     public static final String BROADCAST_ACTION = "com.suslovalex.action.PLAYSONG";
-    private final String TAG = SelectSongRecyclerAdapter.class.getSimpleName();
 
     public SelectSongRecyclerAdapter(List<Song> songs) {
         mSongs = songs;
@@ -29,7 +28,7 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.song_item_recycler_view, parent, false);
 
-        Log.d(PlayerActivity.MyLogs, "SelectSongRecyclerAdapter onCreateViewHolder()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectSongRecyclerAdapter onCreateViewHolder()");
 
         return new SelectSongViewHolder(view);
     }
@@ -39,7 +38,7 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
         final Song song = mSongs.get(position);
         String textValue = song.getArtist() + " - " + song.getTitle() + " - " + song.getGenre();
         holder.artist.setText(textValue);
-        Log.d(PlayerActivity.MyLogs, "SelectSongRecyclerAdapter onBindViewHolder()");
+        Log.d(PlayerActivity.MY_LOGS, "SelectSongRecyclerAdapter onBindViewHolder()");
         holder.artist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,8 +52,6 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
                 intent.putExtra(INTENT_KEY_SONG_ID, song.getId());
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 v.getContext().sendBroadcast(intent);
-                Log.d(TAG,"Message spent: "+ song.getId());
-
 
             }
         });
@@ -81,7 +78,7 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
         public SelectSongViewHolder(@NonNull View itemView) {
             super(itemView);
             artist = itemView.findViewById(R.id.item_song);
-            Log.d(PlayerActivity.MyLogs, "SelectSongViewHolder");
+            Log.d(PlayerActivity.MY_LOGS, "SelectSongViewHolder");
         }
     }
 

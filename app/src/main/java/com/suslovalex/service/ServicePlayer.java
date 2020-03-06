@@ -32,10 +32,10 @@ public class ServicePlayer extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer onBind()");
         getPathToSong(intent);
         mPlayer = MediaPlayer.create(getApplicationContext(), mPathToSong);
 
-        Log.d(PlayerActivity.MyLogs, "ServicePlayer onBind()");
         return mBinder;
     }
 
@@ -49,22 +49,23 @@ public class ServicePlayer extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(PlayerActivity.MyLogs, "ServicePlayer onCreate()");
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer onCreate()");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(PlayerActivity.MyLogs, "ServicePlayer onStartCommand()");
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer onStartCommand()");
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(PlayerActivity.MyLogs, "ServicePlayer onDestroy()");
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer onDestroy()");
     }
 
     public void playMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer. playMusic()");
         if (mPlayer == null) {
             mPlayer = MediaPlayer.create(this, mPathToSong);
         }
@@ -72,12 +73,14 @@ public class ServicePlayer extends Service {
     }
 
     public void pauseMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer. pauseMusic()");
         if (mPlayer != null) {
             mPlayer.pause();
         }
     }
 
     public void stopMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer. stopMusic()");
         if (mPlayer != null) {
             mPlayer.release();
             mPlayer = null;
@@ -93,6 +96,7 @@ public class ServicePlayer extends Service {
     }
 
     public void loadMusic() {
+        Log.d(PlayerActivity.MY_LOGS, "ServicePlayer. loadMusic()");
         mSharedPreferences = getSharedPreferences(POSITION, MODE_PRIVATE);
         int loadCurrentSongPosition = mSharedPreferences.getInt(POSITION, 0);
         mPlayer.seekTo(loadCurrentSongPosition);

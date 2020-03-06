@@ -12,59 +12,62 @@ import com.suslovalex.view.fragment.PlayerFragment;
 
 public class PlayerActivity extends AppCompatActivity {
 
-    public static final String MyLogs = "MyLogs";
+    public static final String MY_LOGS = "MY_LOGS";
     public final static int DEFAULT_SONG_ID = -1;
     public final static String INTENT_KEY_SONG_PATH = "intent_key_song_path";
     public final static String KEY_SONG_ID = "intent_key_song_id";
     private int mSongId;
+    private PlayerFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(MY_LOGS, "PlayerActivity onCreate()"+ this.toString());
         setContentView(R.layout.activity_player);
         initSongId();
-
-        Log.d(MyLogs, "PlayerActivity onCreate()");
+        createFragment();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        createFragment();
-        Log.d(MyLogs, "PlayerActivity onStart()");
+        Log.d(MY_LOGS, "PlayerActivity onStart()");
+        fragment.setSongId(mSongId);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(MyLogs, "PlayerActivity onResume()");
+        Log.d(MY_LOGS, "PlayerActivity onResume()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(MyLogs, "PlayerActivity onPause()");
+        Log.d(MY_LOGS, "PlayerActivity onPause()");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(MyLogs, "PlayerActivity onStop()");
+        Log.d(MY_LOGS, "PlayerActivity onStop()");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(MyLogs, "PlayerActivity onRestart()");
+        Log.d(MY_LOGS, "PlayerActivity onRestart()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(MyLogs, "PlayerActivity onDestroy()");
+        Log.d(MY_LOGS, "PlayerActivity onDestroy()");
     }
 
     private void initSongId() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerActivity initSongId: ");
         Intent intentFromSongReceiver = getIntent();
         if (intentFromSongReceiver == null) {
             mSongId = DEFAULT_SONG_ID;
@@ -74,14 +77,15 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void createFragment() {
+        Log.d(PlayerActivity.MY_LOGS, "PlayerActivity createFragment: ");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        PlayerFragment fragment = PlayerFragment.getPlayerFragment();
+        fragment = PlayerFragment.getPlayerFragment();
         //passSongIdToFragment();
-        Bundle arg = new Bundle();
-        arg.putInt(KEY_SONG_ID, mSongId);
-        fragment.setArguments(arg);
-        //fragment.setSongId(mSongId);
+       //Bundle arg = new Bundle();
+       //arg.putInt(KEY_SONG_ID, mSongId);
+       //fragment.setArguments(arg);
+
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
     }

@@ -13,7 +13,8 @@
 
         </activity>
         <activity android:name="com.suslovalex.view.activity.MainMenuActivity"/>
-        <activity android:name="com.suslovalex.view.activity.PlayerActivity">
+        <activity android:name="com.suslovalex.view.activity.PlayerActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
