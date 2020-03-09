@@ -51,7 +51,7 @@ public class PlayerPresenter implements PlayerContract.Presenter {
     }
 
     public PlayerPresenter(PlayerContract.View playerFragment) {
-        Log.d(PlayerActivity.MY_LOGS, ". PlayerPresenter(PlayerContract.View playerFragment) ");
+        Log.d(PlayerActivity.MY_LOGS, ". PlayerPresenter(PlayerContract.SelectView playerFragment) ");
         mView = playerFragment;
     }
 
