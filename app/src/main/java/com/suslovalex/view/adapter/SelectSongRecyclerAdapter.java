@@ -42,11 +42,6 @@ public class SelectSongRecyclerAdapter extends RecyclerView.Adapter<SelectSongRe
         holder.artist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //Intent intent = new Intent(v.getContext(), PlayerActivity.class);
-                //intent.putExtra(KEY_SONG_ID, song.getId());
-                //v.getContext().startActivity(intent);
-
                 Intent intent = new Intent();
                 intent.setAction(BROADCAST_ACTION);
                 intent.putExtra(INTENT_KEY_SONG_ID, song.getId());

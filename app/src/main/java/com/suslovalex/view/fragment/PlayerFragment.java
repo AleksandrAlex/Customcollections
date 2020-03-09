@@ -32,8 +32,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     private Button mBtnStop;
     private Button mBtnSelect;
     private PlayerPresenter mPlayerPresenter;
-    private int mSongId;
-
 
     private PlayerFragment() {
         Log.d(PlayerActivity.MY_LOGS, "PlayerFragment PlayerFragment(): ");
@@ -71,8 +69,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(PlayerActivity.MY_LOGS, "PlayerFragment onCreate()");
-        initParameters();
-        passSongIdToPlayerPresenter();
+
+
     }
 
     @Override
@@ -208,22 +206,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Pl
         }
     }
 
-    public void setSongId(int songId) {
-        mPlayerPresenter.setSongId(songId);
-        Log.d(PlayerActivity.MY_LOGS, "PlayerFragment setSongId: ");
-    }
-
-    private void initParameters() {
-        Log.d(PlayerActivity.MY_LOGS, "PlayerFragment initParameters()");
+    public void passSongIdToPresenter(int songId) {
         mPlayerPresenter = new PlayerPresenter(this);
-      // if (getArguments() != null) {
-      //     mSongId = getArguments().getInt(PlayerActivity.KEY_SONG_ID);
-      // }
-
-    }
-
-    private void passSongIdToPlayerPresenter() {
-        Log.d(PlayerActivity.MY_LOGS, "PlayerFragment passSongIdToPlayerPresenter()");
-        mPlayerPresenter.setSongId(mSongId);
+        mPlayerPresenter.setSongId(songId);
+        Log.d(PlayerActivity.MY_LOGS, "PlayerFragment passSongIdToPresenter: ");
     }
 }

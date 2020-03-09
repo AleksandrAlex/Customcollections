@@ -92,7 +92,7 @@ public class PlayerPresenter implements PlayerContract.Presenter {
     }
 
     public void setSongId(int songId) {
-        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. setSongId ");
+        Log.d(PlayerActivity.MY_LOGS, "PlayerPresenter. passSongIdToPresenter ");
         mSongId = songId;
 
     }

@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.suslovalex.customcollections.R;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.fragment.PlayerFragment;
@@ -19,21 +21,25 @@ public class PlayerActivity extends AppCompatActivity {
     private int mSongId;
     private PlayerFragment fragment;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(MY_LOGS, "PlayerActivity onCreate()"+ this.toString());
         setContentView(R.layout.activity_player);
-        initSongId();
-        createFragment();
+        if (savedInstanceState == null) {
+
+        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.d(MY_LOGS, "PlayerActivity onStart()");
-        fragment.setSongId(mSongId);
-
+        initSongId();
+        createFragment();
     }
 
     @Override
@@ -85,9 +91,9 @@ public class PlayerActivity extends AppCompatActivity {
        //Bundle arg = new Bundle();
        //arg.putInt(KEY_SONG_ID, mSongId);
        //fragment.setArguments(arg);
+        fragment.passSongIdToPresenter(mSongId);
 
         fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
     }
-
 }

@@ -19,7 +19,7 @@ public class SongReceiver extends BroadcastReceiver {
         id = intent.getIntExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, PlayerActivity.DEFAULT_SONG_ID);
 
         intentToPlayerActivity = new Intent(context, PlayerActivity.class);
-        //intentToPlayerActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentToPlayerActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intentToPlayerActivity.putExtra(SelectSongRecyclerAdapter.INTENT_KEY_SONG_ID, id);
         context.startActivity(intentToPlayerActivity);
 
