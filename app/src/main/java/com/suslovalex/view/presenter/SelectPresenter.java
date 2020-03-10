@@ -4,10 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
@@ -18,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-public class SelectPresenter implements SelectContract.SelectPresenter {
+@InjectViewState
+public class SelectPresenter extends MvpPresenter <SelectContract.SelectView> implements SelectContract.SelectPresenter {
 
     private static final String ALL = "All";
     private static final Uri URI = Uri.parse("content://com.suslovalex.provider/My_Songs");
@@ -91,9 +91,7 @@ public class SelectPresenter implements SelectContract.SelectPresenter {
     public void prepareSongs() {
         Cursor cursorClick = prepareCursorClick();
         mSongs = mSongMapper.mappCursorToSongsList(cursorClick);
-
         cursorClick.close();
-
 
         for (Song song : mSongs) {
             Log.d(TAG, song.toString());
@@ -105,8 +103,6 @@ public class SelectPresenter implements SelectContract.SelectPresenter {
         String[] protection = null;
         String selection = null;
         String[] selectionArgs = null;
-      //  mSelectArtist = mArtistSpinner.getSelectedItem().toString();
-      //  mSelectGenre = mGenreSpinner.getSelectedItem().toString();
         if (mSelectArtist.equals("ALL") && mSelectGenre.equals("ALL")) {
             selection = null;
             selectionArgs = null;

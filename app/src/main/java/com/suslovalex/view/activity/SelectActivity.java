@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.contracts.SelectContract;
@@ -32,24 +34,29 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
     private String mSelectGenre = ALL;
     private SelectSongRecyclerAdapter mSongRecyclerAdapter;
     private RecyclerView.LayoutManager mLinearLayoutManager;
-    private SelectPresenter selectPresenter;
+    @InjectPresenter
+    SelectPresenter selectPresenter;
+    @ProvidePresenter
+    SelectPresenter providePresenter(){
+        return new SelectPresenter(this);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_song_activity);
-        initSelectPresenter();
+        //initSelectPresenter();
         selectPresenter.addDataToDB();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity addDataToDB()");
         initialization();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity initialization()");
     }
 
-    private void initSelectPresenter() {
-        selectPresenter = new SelectPresenter(this);
-        Log.d(FIX, "initSelectPresenter: ");
-    }
+  //  private void initSelectPresenter() {
+  //      selectPresenter = new SelectPresenter(this);
+  //      Log.d(FIX, "initSelectPresenter: ");
+  //  }
 
     @Override
     protected void onStart() {
@@ -91,12 +98,18 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
         mShowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prepareSpinners();
-                passArtistFieldAndGenreFieldToSelectPresenter();
-                selectPresenter.prepareSongs();
-                setSongsToRecyclerAdapter();
+                showChoseSongs();
+
             }
         });
+    }
+
+    @Override
+    public void showChoseSongs() {
+        prepareSpinners();
+        passArtistFieldAndGenreFieldToSelectPresenter();
+        selectPresenter.prepareSongs();
+        setSongsToRecyclerAdapter();
     }
 
     private void setSongsToRecyclerAdapter() {
