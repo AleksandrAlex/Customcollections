@@ -15,8 +15,8 @@ public interface SelectContract {
 
     interface SelectPresenter {
         void addDataToDB();
-        void initializeParametres();
-        void putSongsToRecyclerAdapter();
+        void initialize();
+        void prepareSongs();
         void setSelectArtistField(String artist);
         void setSelectGenreField(String genre);
         String[] getArtistArray();

@@ -82,20 +82,17 @@ public class SelectPresenter implements SelectContract.SelectPresenter {
     }
 
     @Override
-    public void initializeParametres() {
+    public void initialize() {
         mSongMapper = new SongMapper();
-        mLinearLayoutManager = new LinearLayoutManager(mView.getViewContext());
         mSongs = new ArrayList<>();
-        mSongRecyclerAdapter = new SelectSongRecyclerAdapter(mSongs);
-
     }
 
     @Override
-    public void putSongsToRecyclerAdapter() {
+    public void prepareSongs() {
         Cursor cursorClick = prepareCursorClick();
         mSongs = mSongMapper.mappCursorToSongsList(cursorClick);
-        mSongRecyclerAdapter.setSongs(mSongs);
-        mSongRecyclerAdapter.notifyDataSetChanged();
+
+        cursorClick.close();
 
 
         for (Song song : mSongs) {
@@ -161,5 +158,9 @@ public class SelectPresenter implements SelectContract.SelectPresenter {
     private Cursor prepareArtistCursor() {
         String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_ARTIST};
         return mView.getViewContext().getContentResolver().query(URI, projection, null, null, null);
+    }
+
+    public List<Song> getSongs() {
+        return mSongs;
     }
 }

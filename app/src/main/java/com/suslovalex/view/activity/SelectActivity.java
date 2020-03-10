@@ -2,8 +2,6 @@ package com.suslovalex.view.activity;
 
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,21 +12,17 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.suslovalex.Matching.SongMapper;
+
 import com.suslovalex.customcollections.R;
-import com.suslovalex.model.Song;
-import com.suslovalex.model.SongDatabaseHelper;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.contracts.SelectContract;
 import com.suslovalex.view.presenter.SelectPresenter;
 
-
-import java.util.List;
-
 public class SelectActivity extends AppCompatActivity implements SelectContract.SelectView {
 
-    private static final String TAG = SelectActivity.class.getSimpleName();
+    private static final String FIX = "Click!";
     private static final String ALL = "All";
     private Spinner mArtistSpinner;
     private Spinner mGenreSpinner;
@@ -54,6 +48,7 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
 
     private void initSelectPresenter() {
         selectPresenter = new SelectPresenter(this);
+        Log.d(FIX, "initSelectPresenter: ");
     }
 
     @Override
@@ -98,27 +93,42 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
             public void onClick(View v) {
                 prepareSpinners();
                 passArtistFieldAndGenreFieldToSelectPresenter();
-                selectPresenter.putSongsToRecyclerAdapter();
+                selectPresenter.prepareSongs();
+                setSongsToRecyclerAdapter();
             }
         });
+    }
+
+    private void setSongsToRecyclerAdapter() {
+        mSongRecyclerAdapter.setSongs(selectPresenter.getSongs());
+        mSongRecyclerAdapter.notifyDataSetChanged();
     }
 
     private void passArtistFieldAndGenreFieldToSelectPresenter() {
         selectPresenter.setSelectArtistField(mSelectArtist);
         selectPresenter.setSelectGenreField(mSelectGenre);
+        Log.d(FIX, "passArtistFieldAndGenreFieldToSelectPresenter: " +mSelectArtist+" - "+ mSelectGenre);
     }
 
     private void prepareSpinners() {
         mSelectArtist = mArtistSpinner.getSelectedItem().toString();
         mSelectGenre = mGenreSpinner.getSelectedItem().toString();
+        Log.d(FIX, "prepareSpinners: ");
     }
 
     private void initialization() {
         initializeViews();
-        selectPresenter.initializeParametres();
+        initializeParametres();
+        selectPresenter.initialize();
         setViewElementsListeners();
         setSpinnersAdapters();
         setRecyclerParametres();
+    }
+
+    private void initializeParametres() {
+        selectPresenter.initialize();
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mSongRecyclerAdapter = new SelectSongRecyclerAdapter(selectPresenter.getSongs());
     }
 
     private void setRecyclerParametres() {
