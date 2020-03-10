@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
@@ -22,37 +21,39 @@ import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.contracts.SelectContract;
+import com.suslovalex.view.presenter.SelectPresenter;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectActivity extends AppCompatActivity implements SelectContract.SelectView {
 
     private static final String TAG = SelectActivity.class.getSimpleName();
     private static final String ALL = "All";
-    private static final Uri URI = Uri.parse("content://com.suslovalex.provider/My_Songs");
     private Spinner mArtistSpinner;
     private Spinner mGenreSpinner;
     private RecyclerView mSelectSongRecyclerView;
     private Button mShowButton;
     private String mSelectArtist = ALL;
     private String mSelectGenre = ALL;
-    private SongMapper mSongMapper;
-    private List<Song> mSongs;
     private SelectSongRecyclerAdapter mSongRecyclerAdapter;
     private RecyclerView.LayoutManager mLinearLayoutManager;
-    private SelectContract.SelectPresenter selectPresenter;
+    private SelectPresenter selectPresenter;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_song_activity);
+        initSelectPresenter();
         selectPresenter.addDataToDB();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity addDataToDB()");
         initialization();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity initialization()");
+    }
+
+    private void initSelectPresenter() {
+        selectPresenter = new SelectPresenter(this);
     }
 
     @Override
@@ -95,56 +96,26 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
         mShowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor cursorClick = prepareCursorClick();
-                mSongs = mSongMapper.mappCursorToSongsList(cursorClick);
-                mSongRecyclerAdapter.setSongs(mSongs);
-                mSongRecyclerAdapter.notifyDataSetChanged();
-
-
-                for (Song song : mSongs) {
-                    Log.d(TAG, song.toString());
-                }
+                prepareSpinners();
+                passArtistFieldAndGenreFieldToSelectPresenter();
+                selectPresenter.putSongsToRecyclerAdapter();
             }
         });
     }
 
-    private Cursor prepareGenreCursor() {
-        String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_GENRE};
-        return getContentResolver().query(URI, projection, null, null, null);
+    private void passArtistFieldAndGenreFieldToSelectPresenter() {
+        selectPresenter.setSelectArtistField(mSelectArtist);
+        selectPresenter.setSelectGenreField(mSelectGenre);
     }
 
-    private Cursor prepareArtistCursor() {
-        String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_ARTIST};
-        return getContentResolver().query(URI, projection, null, null, null);
-    }
-
-    private Cursor prepareCursorClick() {
-
-        String[] protection = null;
-        String selection = null;
-        String[] selectionArgs = null;
+    private void prepareSpinners() {
         mSelectArtist = mArtistSpinner.getSelectedItem().toString();
         mSelectGenre = mGenreSpinner.getSelectedItem().toString();
-        if (mSelectArtist.equals("ALL") && mSelectGenre.equals("ALL")) {
-            selection = null;
-            selectionArgs = null;
-        } else if (mSelectArtist.equals("ALL")) {
-            selection = SongDatabaseHelper.FIELD_GENRE + "=?";
-            selectionArgs = new String[]{mSelectGenre};
-        } else if (mSelectGenre.equals("ALL")) {
-            selection = SongDatabaseHelper.FIELD_ARTIST + "=?";
-            selectionArgs = new String[]{mSelectArtist};
-        } else {
-            selection = SongDatabaseHelper.FIELD_ARTIST + "=?" + " AND " + SongDatabaseHelper.FIELD_GENRE + "=?";
-            selectionArgs = new String[]{mSelectArtist, mSelectGenre};
-        }
-
-        return getContentResolver().query(URI, protection, selection, selectionArgs, null);
     }
 
     private void initialization() {
         initializeViews();
-        initializeParametres();
+        selectPresenter.initializeParametres();
         setViewElementsListeners();
         setSpinnersAdapters();
         setRecyclerParametres();
@@ -164,31 +135,18 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
     }
 
     private void setGenreSpinnerAdapter() {
-        Cursor cursor = prepareGenreCursor();
-        String[] array = mSongMapper.mappCursorToGenre(cursor);
+        String[] array = selectPresenter.getGenreArray();
         ArrayAdapter<?> genreAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mGenreSpinner.setAdapter(genreAdapter);
-        cursor.close();
     }
 
     private void setArtistSpinnerAdapter() {
-        Cursor cursor = prepareArtistCursor();
-        String[] array = mSongMapper.mappCursorToArtist(cursor);
+        String[] array = selectPresenter.getArtistArray();
         ArrayAdapter<?> artistAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, array);
         artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mArtistSpinner.setAdapter(artistAdapter);
-        cursor.close();
     }
-
-    private void initializeParametres() {
-        mSongMapper = new SongMapper();
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mSongs = new ArrayList<>();
-        mSongRecyclerAdapter = new SelectSongRecyclerAdapter(mSongs);
-
-    }
-
 
     private void initializeViews() {
         mShowButton = findViewById(R.id.showBtn);
@@ -196,10 +154,6 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
         mGenreSpinner = findViewById(R.id.spinnerGenre);
         mSelectSongRecyclerView = findViewById(R.id.select_song_recycler_view);
     }
-
-
-
-
 
     @Override
     public Context getViewContext() {

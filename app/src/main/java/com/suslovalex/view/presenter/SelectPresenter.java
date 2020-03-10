@@ -2,23 +2,41 @@ package com.suslovalex.view.presenter;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
+import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.contracts.SelectContract;
-
-import static android.provider.CalendarContract.CalendarCache.URI;
+import java.util.ArrayList;
+import java.util.List;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class SelectPresenter implements SelectContract.SelectPresenter {
 
-    private SelectContract.SelectView view;
+    private static final String ALL = "All";
+    private static final Uri URI = Uri.parse("content://com.suslovalex.provider/My_Songs");
+    private SelectContract.SelectView mView;
+    private SongMapper mSongMapper;
+    private RecyclerView.LayoutManager mLinearLayoutManager;
+    private List<Song> mSongs;
+    private SelectSongRecyclerAdapter mSongRecyclerAdapter;
+    private String mSelectArtist = ALL;
+    private String mSelectGenre = ALL;
+
+    public SelectPresenter(SelectContract.SelectView view) {
+        mView = view;
+    }
 
     @Override
     public void addDataToDB() {
-        final Cursor cursor = view.getViewContext().getContentResolver().query(URI, null, null, null, null);
+        final Cursor cursor = mView.getViewContext().getContentResolver().query(URI, null, null, null, null);
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 Log.d(TAG, "Amount of return;notes is " + cursor.getCount());
@@ -60,6 +78,88 @@ public class SelectPresenter implements SelectContract.SelectPresenter {
         contentValues.put(SongDatabaseHelper.FIELD_TITLE, song.getTitle());
         contentValues.put(SongDatabaseHelper.FIELD_PATH, song.getPath());
 
-        view.getViewContext().getContentResolver().insert(URI, contentValues);
+        mView.getViewContext().getContentResolver().insert(URI, contentValues);
+    }
+
+    @Override
+    public void initializeParametres() {
+        mSongMapper = new SongMapper();
+        mLinearLayoutManager = new LinearLayoutManager(mView.getViewContext());
+        mSongs = new ArrayList<>();
+        mSongRecyclerAdapter = new SelectSongRecyclerAdapter(mSongs);
+
+    }
+
+    @Override
+    public void putSongsToRecyclerAdapter() {
+        Cursor cursorClick = prepareCursorClick();
+        mSongs = mSongMapper.mappCursorToSongsList(cursorClick);
+        mSongRecyclerAdapter.setSongs(mSongs);
+        mSongRecyclerAdapter.notifyDataSetChanged();
+
+
+        for (Song song : mSongs) {
+            Log.d(TAG, song.toString());
+        }
+    }
+
+    private Cursor prepareCursorClick() {
+
+        String[] protection = null;
+        String selection = null;
+        String[] selectionArgs = null;
+      //  mSelectArtist = mArtistSpinner.getSelectedItem().toString();
+      //  mSelectGenre = mGenreSpinner.getSelectedItem().toString();
+        if (mSelectArtist.equals("ALL") && mSelectGenre.equals("ALL")) {
+            selection = null;
+            selectionArgs = null;
+        } else if (mSelectArtist.equals("ALL")) {
+            selection = SongDatabaseHelper.FIELD_GENRE + "=?";
+            selectionArgs = new String[]{mSelectGenre};
+        } else if (mSelectGenre.equals("ALL")) {
+            selection = SongDatabaseHelper.FIELD_ARTIST + "=?";
+            selectionArgs = new String[]{mSelectArtist};
+        } else {
+            selection = SongDatabaseHelper.FIELD_ARTIST + "=?" + " AND " + SongDatabaseHelper.FIELD_GENRE + "=?";
+            selectionArgs = new String[]{mSelectArtist, mSelectGenre};
+        }
+
+        return mView.getViewContext().getContentResolver().query(URI, protection, selection, selectionArgs, null);
+    }
+
+    @Override
+    public void setSelectArtistField(String artist){
+        mSelectArtist = artist;
+    }
+
+    @Override
+    public void setSelectGenreField(String genre){
+        mSelectGenre = genre;
+    }
+
+    @Override
+    public String [] getArtistArray(){
+        Cursor cursor = prepareArtistCursor();
+        String[] array = mSongMapper.mappCursorToArtist(cursor);
+        cursor.close();
+        return array;
+    }
+
+    @Override
+    public String[] getGenreArray() {
+        Cursor cursor = prepareGenreCursor();
+        String[] array = mSongMapper.mappCursorToGenre(cursor);
+        cursor.close();
+        return array;
+    }
+
+    private Cursor prepareGenreCursor() {
+        String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_GENRE};
+        return mView.getViewContext().getContentResolver().query(URI, projection, null, null, null);
+    }
+
+    private Cursor prepareArtistCursor() {
+        String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_ARTIST};
+        return mView.getViewContext().getContentResolver().query(URI, projection, null, null, null);
     }
 }
