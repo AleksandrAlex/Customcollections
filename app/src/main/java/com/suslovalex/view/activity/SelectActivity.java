@@ -11,18 +11,18 @@ import android.widget.Button;
 import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
-import com.suslovalex.view.contracts.SelectContract;
+import com.suslovalex.view.contracts.SelectView;
 import com.suslovalex.view.presenter.SelectPresenter;
 
-public class SelectActivity extends AppCompatActivity implements SelectContract.SelectView {
+import moxy.MvpAppCompatActivity;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
+
+public class SelectActivity extends MvpAppCompatActivity implements SelectView {
 
     private static final String FIX = "Click!";
     private static final String ALL = "All";
@@ -47,6 +47,7 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_song_activity);
         //initSelectPresenter();
+        selectPresenter.setContext(getApplicationContext());
         selectPresenter.addDataToDB();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity addDataToDB()");
         initialization();
@@ -178,7 +179,7 @@ public class SelectActivity extends AppCompatActivity implements SelectContract.
         mSelectSongRecyclerView = findViewById(R.id.select_song_recycler_view);
     }
 
-    @Override
+
     public Context getViewContext() {
         return getApplicationContext();
     }
