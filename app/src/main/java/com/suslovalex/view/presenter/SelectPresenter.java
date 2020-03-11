@@ -1,16 +1,14 @@
 package com.suslovalex.view.presenter;
 
+import android.app.Application;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
-import androidx.recyclerview.widget.RecyclerView;
 import com.suslovalex.Matching.SongMapper;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Song;
 import com.suslovalex.model.SongDatabaseHelper;
-import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.contracts.SelectView;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,22 +22,18 @@ public class SelectPresenter extends MvpPresenter<SelectView> {
 
     private static final String ALL = "All";
     private static final Uri URI = Uri.parse("content://com.suslovalex.provider/My_Songs");
-    private SelectView mView;
+    private Application mView;
     private SongMapper mSongMapper;
-    private RecyclerView.LayoutManager mLinearLayoutManager;
     private List<Song> mSongs;
-    private SelectSongRecyclerAdapter mSongRecyclerAdapter;
     private String mSelectArtist = ALL;
     private String mSelectGenre = ALL;
-    private Context mContext;
 
-    public SelectPresenter(SelectView view) {
+    public SelectPresenter(Application view) {
         mView = view;
     }
 
-
     public void addDataToDB() {
-        final Cursor cursor = mContext.getContentResolver().query(URI, null, null, null, null);
+        final Cursor cursor = mView.getContentResolver().query(URI, null, null, null, null);
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 Log.d(TAG, "Amount of return;notes is " + cursor.getCount());
@@ -81,7 +75,7 @@ public class SelectPresenter extends MvpPresenter<SelectView> {
         contentValues.put(SongDatabaseHelper.FIELD_TITLE, song.getTitle());
         contentValues.put(SongDatabaseHelper.FIELD_PATH, song.getPath());
 
-        mContext.getContentResolver().insert(URI, contentValues);
+        mView.getContentResolver().insert(URI, contentValues);
     }
 
 
@@ -120,7 +114,7 @@ public class SelectPresenter extends MvpPresenter<SelectView> {
             selectionArgs = new String[]{mSelectArtist, mSelectGenre};
         }
 
-        return mContext.getContentResolver().query(URI, protection, selection, selectionArgs, null);
+        return mView.getContentResolver().query(URI, protection, selection, selectionArgs, null);
     }
 
 
@@ -151,19 +145,15 @@ public class SelectPresenter extends MvpPresenter<SelectView> {
 
     private Cursor prepareGenreCursor() {
         String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_GENRE};
-        return mContext.getContentResolver().query(URI, projection, null, null, null);
+        return mView.getContentResolver().query(URI, projection, null, null, null);
     }
 
     private Cursor prepareArtistCursor() {
         String[] projection = new String[]{"DISTINCT " + SongDatabaseHelper.FIELD_ARTIST};
-        return mContext.getContentResolver().query(URI, projection, null, null, null);
+        return mView.getContentResolver().query(URI, projection, null, null, null);
     }
 
     public List<Song> getSongs() {
         return mSongs;
-    }
-
-    public void setContext(Context context){
-        mContext = context;
     }
 }

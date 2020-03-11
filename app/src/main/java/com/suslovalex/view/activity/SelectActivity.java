@@ -1,7 +1,5 @@
 package com.suslovalex.view.activity;
 
-
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +15,10 @@ import com.suslovalex.customcollections.R;
 import com.suslovalex.view.adapter.SelectSongRecyclerAdapter;
 import com.suslovalex.view.contracts.SelectView;
 import com.suslovalex.view.presenter.SelectPresenter;
-
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
+
 
 public class SelectActivity extends MvpAppCompatActivity implements SelectView {
 
@@ -38,7 +36,7 @@ public class SelectActivity extends MvpAppCompatActivity implements SelectView {
     SelectPresenter selectPresenter;
     @ProvidePresenter
     SelectPresenter providePresenter(){
-        return new SelectPresenter(this);
+        return new SelectPresenter(this.getApplication());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -46,18 +44,11 @@ public class SelectActivity extends MvpAppCompatActivity implements SelectView {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_song_activity);
-        //initSelectPresenter();
-        selectPresenter.setContext(getApplicationContext());
         selectPresenter.addDataToDB();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity addDataToDB()");
         initialization();
         Log.d(PlayerActivity.MY_LOGS, "SelectActivity initialization()");
     }
-
-  //  private void initSelectPresenter() {
-  //      selectPresenter = new SelectPresenter(this);
-  //      Log.d(FIX, "initSelectPresenter: ");
-  //  }
 
     @Override
     protected void onStart() {
@@ -179,8 +170,4 @@ public class SelectActivity extends MvpAppCompatActivity implements SelectView {
         mSelectSongRecyclerView = findViewById(R.id.select_song_recycler_view);
     }
 
-
-    public Context getViewContext() {
-        return getApplicationContext();
-    }
 }
