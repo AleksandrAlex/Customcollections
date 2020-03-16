@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.suslovalex.Retrofit.ApiFactory;
+import com.suslovalex.Retrofit.ApiService;
 import com.suslovalex.adapter.NewsAdapter;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Article;
@@ -14,10 +16,6 @@ import com.suslovalex.model.News;
 
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -38,19 +36,17 @@ public class MainActivity extends AppCompatActivity {
         ApiFactory apiFactory = ApiFactory.getInstance();
         ApiService apiService = apiFactory.getApiService();
         disposable = apiService.getArticles()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<News>() {
                     @Override
                     public void accept(News news) throws Exception {
                         newsAdapter.setArticles(news.getArticles());
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.d("Error", "Error connection");
-
                     }
                 });
 

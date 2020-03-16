@@ -1,5 +1,6 @@
 package com.suslovalex.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         Article article = mArticles.get(position);
-        holder.author.setText(article.getAuthor());
-        holder.title.setText(article.getTitle());
-        holder.publishedAt.setText(article.getPublishedAt());
+        holder.author.setText("author: "+article.getAuthor());
+        holder.title.setText("Title: "+article.getTitle());
+        holder.publishedAt.setText("Published at: "+article.getPublishedAt());
+
+    //  holder.author.setOnClickListener(new View.OnClickListener() {
+    //      @Override
+    //      public void onClick(View v) {
+    //          Intent newsDescription = new Intent(v.getContext(), DescriptionNewsActivity.class);
+    //          v.getContext().startActivity(newsDescription);
+    //      }
+    //  });
 
     }
 
@@ -48,7 +57,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         return mArticles.size();
     }
 
-    public class NewsViewHolder extends RecyclerView.ViewHolder{
+    public class NewsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView author;
         private TextView title;
@@ -59,6 +68,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             author = itemView.findViewById(R.id.authorTextView);
             title = itemView.findViewById(R.id.titleTextView);
             publishedAt = itemView.findViewById(R.id.publishedTextView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent newsDescription = new Intent(v.getContext(), DescriptionNewsActivity.class);
+                    v.getContext().startActivity(newsDescription);
+                }
+            });
+
         }
+
     }
 }
