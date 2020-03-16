@@ -1,9 +1,13 @@
 package com.suslovalex.model;
 
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
+
 public class Article {
+
 
     @SerializedName("source")
     @Expose
@@ -29,6 +33,7 @@ public class Article {
     @SerializedName("content")
     @Expose
     private String content;
+
 
     public Source getSource() {
         return source;
@@ -93,5 +98,4 @@ public class Article {
     public void setContent(String content) {
         this.content = content;
     }
-
 }

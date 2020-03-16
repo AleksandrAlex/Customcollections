@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Article;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>{
@@ -72,8 +73,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent newsDescription = new Intent(v.getContext(), DescriptionNewsActivity.class);
-                    v.getContext().startActivity(newsDescription);
+                    int position = getAdapterPosition();
+                    Article article = mArticles.get(position);
+                    String title = article.getTitle();
+                    String name = article.getSource().getName();
+                    String description = article.getDescription();
+
+                    Intent intent = new Intent(v.getContext(), DescriptionNewsActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("title", title);
+                    intent.putExtra("description", description);
+                    v.getContext().startActivity(intent);
                 }
             });
 
