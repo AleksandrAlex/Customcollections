@@ -1,4 +1,4 @@
-package com.suslovalex.Retrofit;
+package com.suslovalex.retrofit;
 
 import com.suslovalex.model.News;
 import io.reactivex.Observable;

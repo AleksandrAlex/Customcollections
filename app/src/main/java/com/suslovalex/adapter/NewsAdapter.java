@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.suslovalex.customcollections.R;
 import com.suslovalex.model.Article;
+import com.suslovalex.view.DescriptionNewsActivity;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>{
@@ -39,17 +39,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         Article article = mArticles.get(position);
-        holder.author.setText("author: "+article.getAuthor());
-        holder.title.setText("Title: "+article.getTitle());
-        holder.publishedAt.setText("Published at: "+article.getPublishedAt());
-
-    //  holder.author.setOnClickListener(new View.OnClickListener() {
-    //      @Override
-    //      public void onClick(View v) {
-    //          Intent newsDescription = new Intent(v.getContext(), DescriptionNewsActivity.class);
-    //          v.getContext().startActivity(newsDescription);
-    //      }
-    //  });
+        String author = "author: "+article.getAuthor();
+        String title = "Title: "+article.getTitle();
+        String publishedAt = "Published at: "+article.getPublishedAt();
+        holder.author.setText(author);
+        holder.title.setText(title);
+        holder.publishedAt.setText(publishedAt);
 
     }
 

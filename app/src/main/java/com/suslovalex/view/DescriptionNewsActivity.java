@@ -1,4 +1,4 @@
-package com.suslovalex.adapter;
+package com.suslovalex.view;
 
 import android.content.Intent;
 import android.os.Bundle;

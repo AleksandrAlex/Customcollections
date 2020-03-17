@@ -1,4 +1,4 @@
-package com.suslovalex.Retrofit;
+package com.suslovalex.retrofit;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
