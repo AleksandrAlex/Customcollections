@@ -73,16 +73,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    Article article = mArticles.get(position);
-                    String title = article.getTitle();
-                    String name = article.getSource().getName();
-                    String description = article.getDescription();
+                   int position = getAdapterPosition();
+                   Article article = mArticles.get(position);
 
                     Intent intent = new Intent(v.getContext(), DescriptionNewsActivity.class);
-                    intent.putExtra("name", name);
-                    intent.putExtra("title", title);
-                    intent.putExtra("description", description);
+                    intent.putExtra("article", article);
                     v.getContext().startActivity(intent);
                 }
             });

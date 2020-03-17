@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.suslovalex.customcollections.R;
+import com.suslovalex.model.Article;
 
 
 public class DescriptionNewsActivity extends AppCompatActivity {
@@ -25,13 +26,11 @@ public class DescriptionNewsActivity extends AppCompatActivity {
         descriptionTextView = findViewById(R.id.description_text);
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String title = intent.getStringExtra("title");
-        String description = intent.getStringExtra("description");
+        Article article = (Article)intent.getSerializableExtra("article");
 
-        titleTextView.setText(title);
-        nameTextView.setText(name);
-        descriptionTextView.setText(description);
+        titleTextView.setText(article.getTitle());
+        nameTextView.setText(article.getSource().getName());
+        descriptionTextView.setText(article.getDescription());
 
 
 
