@@ -3,6 +3,7 @@ package com.suslovalex.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 
@@ -19,12 +20,14 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
     private RecyclerView mNewsRecyclerView;
     private NewsAdapter mNewsAdapter;
     private BreakingNewsPresenter mPresenter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prepareRecyclerView();
+        prepareSwipeRefreshLayout();
         initPresenter();
         loadData();
     }
@@ -33,6 +36,12 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.closeNetwork();
+    }
+
+
+    @Override
+    public void showNews(List<Article> articles){
+        mNewsAdapter.setArticles(articles);
     }
 
     private void prepareRecyclerView() {
@@ -47,12 +56,23 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
         mPresenter = new BreakingNewsPresenter(this);
     }
 
+    private void prepareSwipeRefreshLayout() {
+       swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+       swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+           @Override
+           public void onRefresh() {
+               loadData();
+               mNewsAdapter.notifyDataSetChanged();
+               swipeRefreshLayout.setRefreshing(false);
+
+           }
+       });
+    }
+
     private void loadData() {
         mPresenter.loadNews();
     }
 
-    @Override
-    public void showNews(List<Article> articles){
-        mNewsAdapter.setArticles(articles);
-    }
 }
+
+
