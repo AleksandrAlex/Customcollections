@@ -1,11 +1,12 @@
 package com.suslovalex.presenter;
 
 import android.util.Log;
-
 import com.suslovalex.model.News;
 import com.suslovalex.retrofit.ApiFactory;
 import com.suslovalex.retrofit.ApiService;
 import com.suslovalex.view.IBreakingNewsView;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -26,16 +27,20 @@ public class BreakingNewsPresenter {
         ApiService apiService = apiFactory.getApiService();
         mDisposable = apiService.getArticles()
                 .subscribeOn(Schedulers.io())
+                .timeout(5000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<News>() {
                     @Override
                     public void accept(News news) throws Exception {
+                        mView.showDialogLoading();
                         mView.showNews(news.getArticles());
+                        mView.hideDialog();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.d("Error", "Error connection");
+                        mView.showDialogError();
                     }
                 });
     }
