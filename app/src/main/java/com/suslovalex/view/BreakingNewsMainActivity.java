@@ -7,6 +7,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.suslovalex.presenter.BreakingNewsPresenter;
 import com.suslovalex.adapter.NewsAdapter;
@@ -16,19 +21,15 @@ import com.suslovalex.model.Article;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-
 public class BreakingNewsMainActivity extends AppCompatActivity implements IBreakingNewsView {
 
     private RecyclerView mNewsRecyclerView;
     private NewsAdapter mNewsAdapter;
     private BreakingNewsPresenter mPresenter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressDialog dialog;
-    private Disposable disposable;
-    private SwipeRefreshLayout.OnRefreshListener refreshListener;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ProgressDialog mDialog;
+    private Spinner spinner;
+    private ArrayAdapter<String> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +37,16 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
         setContentView(R.layout.activity_main);
         prepareRecyclerView();
         initPresenter();
+        prepareSpinner();
         loadData();
         prepareSwipeRefreshLayout();
     }
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.closeNetwork();
-        disposable.dispose();
     }
-
 
     @Override
     public void showNews(List<Article> articles){
@@ -56,18 +55,24 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
 
     @Override
     public void showDialogLoading() {
-        dialog = new ProgressDialog(this);
-        dialog.setCancelable(false);
-        dialog.setTitle("Breaking News!");
-        dialog.setMessage("Loading...");
-        dialog.show();
+        mDialog = new ProgressDialog(this);
+        mDialog.setCancelable(false);
+        mDialog.setTitle("Breaking News!");
+        mDialog.setMessage("Loading...");
+        mDialog.show();
     }
 
     @Override
     public void showDialogError() {
-        dialog.setMessage("Error....sorry");
-        dialog.show();
+        mDialog.setMessage("Error....sorry");
+        mDialog.show();
     }
+
+    @Override
+    public void hideDialog() {
+        mDialog.dismiss();
+    }
+
 
     private void prepareRecyclerView() {
         mNewsRecyclerView = findViewById(R.id.recycler_news);
@@ -82,24 +87,44 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
     }
 
     private void prepareSwipeRefreshLayout() {
-       swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-       swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+       mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+       mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
              @Override
              public void onRefresh() {
                  loadData();
                  mNewsAdapter.notifyDataSetChanged();
-                 swipeRefreshLayout.setRefreshing(false);
+                 mSwipeRefreshLayout.setRefreshing(false);
              }
          });
     }
 
-    @Override
-    public void hideDialog() {
-        dialog.dismiss();
-    }
 
     private void loadData() {
         mPresenter.loadNews();
+    }
+
+    private void prepareSpinner() {
+        spinner = findViewById(R.id.news_spinner);
+        String [] newsArray = {"TECHNOLOGY", "SPORT", "SCIENCE", "HEALTH", "ENTERTAINMENT"};
+        spinnerAdapter = new ArrayAdapter<>(this ,
+                android.R.layout.simple_spinner_item, newsArray);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedNews = parent.getSelectedItem().toString();
+                Toast.makeText(BreakingNewsMainActivity.this, ""+selectedNews, Toast.LENGTH_SHORT).show();
+                mPresenter.setSelectedNews(selectedNews);
+                //loadData();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 }
 

@@ -1,6 +1,5 @@
 package com.suslovalex.presenter;
 
-import android.os.CountDownTimer;
 import android.util.Log;
 import com.suslovalex.model.News;
 import com.suslovalex.retrofit.ApiFactory;
@@ -11,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -20,6 +20,7 @@ public class BreakingNewsPresenter {
 
     private Disposable mDisposable;
     private IBreakingNewsView mView;
+    private String mSelectedNews = "TECHNOLOGY";
 
     public BreakingNewsPresenter(IBreakingNewsView view) {
         mView = view;
@@ -28,9 +29,29 @@ public class BreakingNewsPresenter {
     public void loadNews(){
         ApiFactory apiFactory = ApiFactory.getInstance();
         ApiService apiService = apiFactory.getApiService();
-        mDisposable = apiService.getArticles()
+        Observable<News> observable = null;
+        switch (mSelectedNews){
+            case ("TECHNOLOGY"):
+                observable = apiService.getTechnologyArticles();
+                break;
+            case ("HEALTH"):
+                observable = apiService.getHealthArticles();
+                break;
+            case("SPORT"):
+                observable = apiService.getSportArticles();
+                break;
+            case ("ENTERTAINMENT"):
+                observable = apiService.getEntertainmentArticles();
+                break;
+            case ("SCIENCE"):
+                observable = apiService.getScienceArticles();
+                break;
+                default:
+                    break;
+        }
+
+        mDisposable = observable
                 .subscribeOn(Schedulers.io())
-                .timeout(5000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<News>() {
                     @Override
@@ -58,5 +79,10 @@ public class BreakingNewsPresenter {
 
     public void closeNetwork(){
         mDisposable.dispose();
+    }
+
+    public void setSelectedNews(String selectedNews) {
+        mSelectedNews = selectedNews;
+        //loadNews();
     }
 }
