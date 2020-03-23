@@ -57,7 +57,7 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
     @Override
     public void showDialogLoading() {
         dialog = new ProgressDialog(this);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setTitle("Breaking News!");
         dialog.setMessage("Loading...");
         dialog.show();
@@ -66,6 +66,7 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
     @Override
     public void showDialogError() {
         dialog.setMessage("Error....sorry");
+        dialog.show();
     }
 
     private void prepareRecyclerView() {
@@ -85,12 +86,9 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
              @Override
              public void onRefresh() {
-                 //showDialogLoading();
                  loadData();
                  mNewsAdapter.notifyDataSetChanged();
                  swipeRefreshLayout.setRefreshing(false);
-                 //hideDialog();
-
              }
          });
     }

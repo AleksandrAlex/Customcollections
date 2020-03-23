@@ -1,11 +1,14 @@
 package com.suslovalex.presenter;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 import com.suslovalex.model.News;
 import com.suslovalex.retrofit.ApiFactory;
 import com.suslovalex.retrofit.ApiService;
 import com.suslovalex.view.IBreakingNewsView;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,8 +36,16 @@ public class BreakingNewsPresenter {
                     @Override
                     public void accept(News news) throws Exception {
                         mView.showDialogLoading();
+                        // Timer????
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                mView.hideDialog();
+                            }
+                        }, 2000);
+
                         mView.showNews(news.getArticles());
-                        mView.hideDialog();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
