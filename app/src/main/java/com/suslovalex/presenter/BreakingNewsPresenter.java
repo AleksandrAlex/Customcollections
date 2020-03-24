@@ -77,6 +77,5 @@ public class BreakingNewsPresenter {
 
     public void setSelectedNews(String selectedNews) {
         mSelectedNews = selectedNews;
-        //loadNews();
     }
 }

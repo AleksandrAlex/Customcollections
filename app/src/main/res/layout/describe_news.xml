@@ -5,20 +5,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/title_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Title" />
-
-    <TextView
-        android:id="@+id/name_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Name" />
-
-    <TextView
         android:id="@+id/description_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Description" />
+
+    <ImageView
+        android:id="@+id/loaded_image"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
