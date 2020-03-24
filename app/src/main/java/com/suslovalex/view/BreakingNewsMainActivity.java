@@ -114,9 +114,8 @@ public class BreakingNewsMainActivity extends AppCompatActivity implements IBrea
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedNews = parent.getSelectedItem().toString();
-                Toast.makeText(BreakingNewsMainActivity.this, ""+selectedNews, Toast.LENGTH_SHORT).show();
                 mPresenter.setSelectedNews(selectedNews);
-                //loadData();
+                loadData();
             }
 
             @Override

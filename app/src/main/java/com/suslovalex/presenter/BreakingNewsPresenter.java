@@ -26,18 +26,18 @@ public class BreakingNewsPresenter {
         mView = view;
     }
 
-    public void loadNews(){
+    public void loadNews() {
         ApiFactory apiFactory = ApiFactory.getInstance();
         ApiService apiService = apiFactory.getApiService();
         Observable<News> observable = null;
-        switch (mSelectedNews){
+        switch (mSelectedNews) {
             case ("TECHNOLOGY"):
                 observable = apiService.getTechnologyArticles();
                 break;
             case ("HEALTH"):
                 observable = apiService.getHealthArticles();
                 break;
-            case("SPORT"):
+            case ("SPORT"):
                 observable = apiService.getSportArticles();
                 break;
             case ("ENTERTAINMENT"):
@@ -46,35 +46,29 @@ public class BreakingNewsPresenter {
             case ("SCIENCE"):
                 observable = apiService.getScienceArticles();
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
-
-        mDisposable = observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<News>() {
-                    @Override
-                    public void accept(News news) throws Exception {
-                        mView.showDialogLoading();
-                        // Timer????
-                        Timer timer = new Timer();
-                        timer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                mView.hideDialog();
-                            }
-                        }, 2000);
-
-                        mView.showNews(news.getArticles());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.d("Error", "Error connection");
-                        mView.showDialogError();
-                    }
-                });
+        if (observable != null) {
+            mDisposable = observable
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<News>() {
+                        @Override
+                        public void accept(News news) throws Exception {
+                            mView.showDialogLoading();
+                            // Timer????
+                            mView.hideDialog();
+                            mView.showNews(news.getArticles());
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            Log.d("Error", "Error connection");
+                            mView.showDialogError();
+                        }
+                    });
+        }
     }
 
     public void closeNetwork(){
